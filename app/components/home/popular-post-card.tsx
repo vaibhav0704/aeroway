@@ -8,7 +8,7 @@ type PopularPostProps = {
 
 const PopularPostCard = ({ img, text, date }: PopularPostProps) => {
   return (
-    <div className="flex items-center gap-3 p-3 bg-white rounded-lg shadow-sm border border-gray-200 w-full max-w-sm">
+    <div className="flex items-center gap-3 p-3  rounded-lg shadow-sm  w-full max-w-sm">
       
       {/* ROUNDED IMAGE */}
       <Image
@@ -16,7 +16,7 @@ const PopularPostCard = ({ img, text, date }: PopularPostProps) => {
         alt="post image"
         width={60}
         height={60}
-        className="rounded-full object-cover"
+        className="rounded-full h-16 w-16 object-cover"
       />
 
       {/* TEXT + DATE */}

@@ -1,19 +1,41 @@
-
 import Image from "next/image";
 import Text from "./components/home/text";
 import Section2 from "./components/home/section2";
 import Section3 from "./components/home/sections3";
 import DebugRedux from "./components/data";
 
-
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <Text/>
-      <Section2/>
-      <Section3/>
-      <DebugRedux/>
-     
+    <div className="flex flex-col p-6 md:p-10 xl:px-20 min-h-screen items-center justify-center bg-[#f9fbff] pt-8 xl:max-w-[4xl] text-justify gap-20 font-sans dark:bg-black">
+      <Text />
+      <section>
+        <div>
+          <h4 className="text-4xl mb-4
+             bg-linear-to-r from-orange-600 via-orange-200 to-orange-100
+             text-transparent bg-clip-text">
+            Editor's picked
+          </h4>
+          <p className="text-gray-400 text-lg">Featured and highly rated articles</p>
+        </div>
+        <Section2 />
+      </section>
+      <section>
+        <div className="flwx flex-col gap-6 py-6" >
+          <h4
+            className="text-4xl  mb-4
+             bg-linear-to-r from-orange-600 via-orange-200 to-orange-100
+             text-transparent bg-clip-text"
+          >
+            Recent posts
+          </h4>
+          <p className="text-gray-400 text-lg">Don't miss the latest trends</p>
+        </div>
+        
+          <Section3 />
+       
+      </section>
+
+      <DebugRedux />
     </div>
   );
 }
