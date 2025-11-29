@@ -26,8 +26,8 @@ export default function DebugRedux() {
   // Print Redux state when it updates
   useEffect(() => {
     console.log("=== REDUX DEBUG DATA ===");
-    console.log("📘 Blogs:", blogs);
-    console.log("📝 Latest Posts:", posts);
+    // console.log("📘 Blogs:", blogs);
+    // console.log("📝 Latest Posts:", posts);
     console.log("👤 Auth:", auth);
   }, [blogs, posts, auth]);
 

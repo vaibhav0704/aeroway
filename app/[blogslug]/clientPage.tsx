@@ -1,10 +1,10 @@
 "use client";
 
 import { fetchBlogs } from "@/redux/slices/blogSlice";
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/redux/store";
 import Image from "next/image";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function ClientPage({ blogslug }: { blogslug: string }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -23,7 +23,7 @@ export default function ClientPage({ blogslug }: { blogslug: string }) {
   if (!blog) {
     return (
       <div className="flex justify-center p-4 xl:pt-20 min-h-screen bg-[#f9fbff]">
-        <h1 className="text-2xl text-gray-500">Loading Blog...</h1>
+        <Image alt="loading" height={50} width={800} src={"/images/loading.gif"}/>
       </div>
     );
   }
@@ -35,7 +35,7 @@ export default function ClientPage({ blogslug }: { blogslug: string }) {
           {blog.blog_title}
         </h1>
         <div>
-          <div className="flex justify-between flex-col gap-8 ">
+          <div className="flex justify-between lg:w-2xl flex-col gap-8 ">
             <div className="flex items-center gap-3 mt-4">
               <div className="relative w-14 h-14">
                 <Image
@@ -55,7 +55,7 @@ export default function ClientPage({ blogslug }: { blogslug: string }) {
                 </p>
               </div>
             </div>
-            <div className="relative lg:w-2xl h-52 sm:h-80 xl:h-96">
+            <div className="relative  h-52 sm:h-80 xl:h-96">
               <Image
                 src={blog.blog_feature_image}
                 alt={blog.blog_title}
@@ -63,6 +63,7 @@ export default function ClientPage({ blogslug }: { blogslug: string }) {
                 className="object-cover rounded-xl"
               />
             </div>
+            <div className="text-justify" dangerouslySetInnerHTML={{ __html: blog.blog_content }} />
           </div>
         </div>
       </div>

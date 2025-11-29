@@ -1,3 +1,5 @@
+import CategoryClientPage from "./categoryClientPage";
+
 export default async function CategoryPage({
   params,
 }: {
@@ -11,10 +13,8 @@ export default async function CategoryPage({
 
   return (
     <div className="pt-10 bg-[#f9fbff] " >
-        <div>
-            <h1 className="text-3xl font-bold">{category_name}</h1>
-
-        </div>
+      
+            <CategoryClientPage category={category}/>
       
     </div>
   );

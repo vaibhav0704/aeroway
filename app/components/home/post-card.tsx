@@ -12,7 +12,7 @@ type BlogType = {
 
 const PostCard = ({ blog }: { blog: BlogType }) => {
   return (
-    <Link href={blog.blog_slug} >
+    <Link href={`/${blog.blog_slug}`} >
       <div className="bg-slate-300/20 p-6 max-w-md w-full mx-auto  shadow-lg overflow-hidden hover:scale-[1.02] transition-all">
         <div className="relative w-full h-fit aspect-square py-10 ">
           <Image
