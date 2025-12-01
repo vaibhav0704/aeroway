@@ -1,11 +1,13 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { FiMenu, FiSearch, FiUser, FiX } from "react-icons/fi";
 
 export default function Header() {
   const [open, setOpen] = useState(false);
+  const pathname=usePathname();
 
   return (
     <nav className="w-full bg-[#f9fbff] sticky top-0 z-50 px-6 2xl:px-96">
@@ -32,22 +34,22 @@ export default function Header() {
           ${open ? "top-16" : "top-[-420px]"}`}
         >
           <li>
-            <Link onClick={()=>setOpen(false)} href="/" className="hover:text-blue-600 block py-2">
+            <Link onClick={()=>setOpen(false)} href="/"       className={`hover:text-[#4e658a] block py-2 ${pathname=="/"?"text-[#4e658a] font-semibold":""}`}>
               Home
             </Link>
           </li>
           <li>
-            <Link onClick={()=>setOpen(false)} href="/publications" className="hover:text-blue-600 block py-2">
+            <Link onClick={()=>setOpen(false)} href="/publications" className={`hover:text-[#4e658a] block py-2 ${pathname=="/publications"?"text-[#4e658a] font-semibold":""}`}>
               Publications
             </Link>
           </li>
           <li>
-            <Link onClick={()=>setOpen(false)} href="/about-us" className="hover:text-blue-600 block py-2">
+            <Link onClick={()=>setOpen(false)} href="/about-us"  className={`hover:text-[#4e658a] block py-2 ${pathname=="/about-us"?"text-[#4e658a] font-semibold":""}`}>
               About Us
             </Link>
           </li>
           <li>
-            <Link onClick={()=>setOpen(false)} href="/contact-us" className="hover:text-blue-600 block py-2">
+            <Link onClick={()=>setOpen(false)} href="/contact-us" className={`hover:text-[#4e658a] block py-2 ${pathname=="/contact-us"?"text-[#4e658a] font-semibold":""}`}>
               Contact Us
             </Link>
           </li>
@@ -68,7 +70,7 @@ export default function Header() {
         <div className="hidden lg:flex">
           <Link
             href="/login"
-            className="px-6 py-2 text-white font-bold bg-linear-to-r from-orange-600 to-orange-300 rounded-md transition"
+            className={`px-6 py-2 text-white font-bold bg-linear-to-r from-orange-600 to-orange-300 rounded-md transition`}
           >
             Log in
           </Link>

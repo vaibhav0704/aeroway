@@ -10,11 +10,10 @@ export default function CategoryClientPage({ category }: { category: string }) {
   const dispatch = useDispatch<AppDispatch>();
   const blogs = useSelector((state: RootState) => state.blogs.blogs);
   const [visibleCards, setVisibleCards] = useState(6);
-
-  // Filter blogs based on category
+  
   const categoryBlogs = blogs.filter((b) => b.category_slug === category);
 
-  // Load more logic (category based)
+  
   const showMore = () => {
     if (visibleCards >= categoryBlogs.length) {
       setVisibleCards(6);
@@ -23,18 +22,18 @@ export default function CategoryClientPage({ category }: { category: string }) {
     }
   };
 
-  // Fetch blogs on load
+  
   useEffect(() => {
     dispatch(fetchBlogs());
   }, [dispatch]);
 
-  // Debug logs
+
   useEffect(() => {
     console.log("All Blogs: ", blogs);
     console.log("Category Blogs:", categoryBlogs);
   }, [categoryBlogs, blogs]);
 
-  // Loading UI
+
   if (categoryBlogs.length === 0) {
     return (
       <div className="flex justify-center p-4 xl:pt-20 min-h-screen bg-[#f9fbff]">
@@ -47,12 +46,12 @@ export default function CategoryClientPage({ category }: { category: string }) {
     <div className="flex justify-center p-4 px-6 xl:pt-20 min-h-screen bg-[#f9fbff]">
       <div className="2xl:w-[60vw]">
         <h1 className="text-4xl mb-4 lg:w-[70%] text-center lg:text-start bg-linear-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">
-          {category}
+          {categoryBlogs[0].category_name || "No Result found"}
         </h1>
 
         <div className="flex justify-between  flex-col gap-8">
           {/* Blog Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 gap-x-0">
             {categoryBlogs.slice(0, visibleCards).map((blog) => (
               <PostCard key={blog.blog_id} blog={blog} />
             ))}

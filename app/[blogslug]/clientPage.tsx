@@ -5,6 +5,8 @@ import { AppDispatch, RootState } from "@/redux/store";
 import Image from "next/image";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import CategorySidebar from "../components/category-sidebar";
+import PopularPosts from "../components/home/popular-posts";
 
 export default function ClientPage({ blogslug }: { blogslug: string }) {
   const dispatch = useDispatch<AppDispatch>();
@@ -29,7 +31,7 @@ export default function ClientPage({ blogslug }: { blogslug: string }) {
   }
 
   return (
-    <div className="flex justify-center p-4 px-6 xl:pt-20 min-h-screen bg-[#f9fbff]">
+    <div className="flex flex-col lg:flex-row gap-4 lg:px-80 xl:px-96 justify-center p-4 px-6 xl:pt-20 min-h-screen bg-[#f9fbff]">
       <div className="xl:w-[60vw]">
         <h1 className="text-4xl mb-4 lg:w-[70%] text-center lg:text-start bg-linear-to-r from-orange-600 to-orange-400 bg-clip-text text-transparent">
           {blog.blog_title}
@@ -66,6 +68,10 @@ export default function ClientPage({ blogslug }: { blogslug: string }) {
             <div className="text-justify" dangerouslySetInnerHTML={{ __html: blog.blog_content }} />
           </div>
         </div>
+      </div>
+      <div className="flex flex-col gap-4" >
+        <CategorySidebar/>
+        <PopularPosts/>
       </div>
     </div>
   );

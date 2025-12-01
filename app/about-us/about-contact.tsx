@@ -1,6 +1,6 @@
-
 "use client";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const AboutContact = () => {
   const scrollToTop = () => {
@@ -11,10 +11,18 @@ const AboutContact = () => {
   };
 
   return (
-    <div className="mb-20 flex flex-col gap-6 pt-10">
+    <motion.div
+      className="mb-20 flex flex-col gap-6 pt-10"
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.3 }}
+      transition={{ duration: 0.8 }}
+    >
       <div className="text-center">
         <h2 className="bg-linear-to-r from-orange-600 via-orange-500 to-orange-100
-             text-transparent bg-clip-text text-3xl font-bold">Connect With Us</h2>
+             text-transparent bg-clip-text text-3xl font-bold">
+          Connect With Us
+        </h2>
       </div>
       <div className=" bg-[#e8edf5] border border-[#c2d4ee]  p-10 rounded-xl max-w-3xl mx-auto">
         <div className="card-testimonials">
@@ -26,7 +34,7 @@ const AboutContact = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

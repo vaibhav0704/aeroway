@@ -8,9 +8,9 @@ type PopularPostProps = {
 
 const PopularPostCard = ({ img, text, date }: PopularPostProps) => {
   return (
-    <div className="flex items-center gap-3 p-3  rounded-lg shadow-sm  w-full max-w-sm">
+    <div className="flex items-center gap-3 p-3  w-full max-w-sm">
       
-      {/* ROUNDED IMAGE */}
+
       <Image
         src={img}
         alt="post image"

@@ -1,12 +1,19 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Typewriter from "typewriter-effect";
 
 const Hero = () => {
   return (
     <div className="w-full grid lg:grid-cols-2 gap-10 items-end relative">
-      <div className="flex flex-col gap-4">
+      <motion.div
+        initial={{ opacity: 0, x: -40 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="flex flex-col gap-4"
+      >
         <span className=" font-bold text-[#7e9cc7]">Hello Everyone!</span>
 
         <h1
@@ -34,16 +41,26 @@ const Hero = () => {
             and aviation to the curious and enthusiastic minds of today.
           </p>
         </div>
-      </div>
+      </motion.div>
 
       <div className="flex justify-center relative">
-        <img
-          src="https://aeroway.s3-eu-central-2.ionoscloud.com/About-Image-Home_Page-1-1-2-1-1-1-1.png"
-          alt="Aeroway.One About Us"
-          loading="lazy"
-          className="w-full max-w-md relative z-10"
-        />
+        <motion.div
+          initial={{ x: 200, y: 200, opacity: 0 }}
+          whileInView={{ x: 0, y: 0, rotate: 0, opacity: 1 }}
+          viewport={{ once: true, amount: 0.5 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
+        >
+          <Image
+            src="https://aeroway.s3-eu-central-2.ionoscloud.com/About-Image-Home_Page-1-1-2-1-1-1-1.png"
+            alt="Aeroway.One About Us"
+            width={400}
+            height={200}
+            loading="lazy"
+            className="w-full max-w-md relative z-10"
+          />
+        </motion.div>
 
+      
         <motion.img
           animate={{ y: [0, -15, 0] }}
           transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}

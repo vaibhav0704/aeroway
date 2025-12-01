@@ -1,7 +1,9 @@
 import CheckAuth from "./components/check-auth";
+import DebugRedux from "./components/data";
 import Section2 from "./components/home/section2";
 import Section3 from "./components/home/sections3";
 import Text from "./components/home/text";
+import Quiz from "./components/quiz";
 
 export default function Home() {
   return (
@@ -39,17 +41,17 @@ export default function Home() {
       <section>
         <div>
           <h4
-            className="text-4xl mb-4
+            className="text-6xl mb-4 
              bg-linear-to-r from-orange-600 text-center via-orange-500 to-orange-200
              text-transparent bg-clip-text"
           >
             Quiz
           </h4>
-          <p className="text-gray-400 text-lg">
+          <p className="text-slate-400 text-lg text-center">
             Test your knowledge and gain valuable insights
           </p>
         </div>
-        {/* <Quiz/> */}
+        <Quiz/>
       </section>
       <CheckAuth/>
       {/* <DebugRedux /> */}

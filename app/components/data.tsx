@@ -2,15 +2,13 @@
 
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { RootState } from "@/redux/store";
+import { AppDispatch, RootState } from "@/redux/store";
 import { fetchBlogs } from "@/redux/slices/blogSlice";
 import { fetchLatestPosts } from "@/redux/slices/postSlice";
 
-// ⬇️ Import your fetch actions here
-
 
 export default function DebugRedux() {
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const blogs = useSelector((state: RootState) => state.blogs);
   const posts = useSelector((state: RootState) => state.posts);
@@ -26,8 +24,8 @@ export default function DebugRedux() {
   // Print Redux state when it updates
   useEffect(() => {
     console.log("=== REDUX DEBUG DATA ===");
-    // console.log("📘 Blogs:", blogs);
-    // console.log("📝 Latest Posts:", posts);
+    console.log("📘 Blogs:", blogs);
+    console.log("📝 Latest Posts:", posts);
     console.log("👤 Auth:", auth);
   }, [blogs, posts, auth]);
 
