@@ -7,12 +7,29 @@ import { TfiHeadphoneAlt } from "react-icons/tfi";
 import { SlLocationPin } from "react-icons/sl";
 import { TiArrowRightThick } from "react-icons/ti";
 import { motion } from "framer-motion";
+import type { ChangeEvent, FormEvent } from "react";
+
+interface FormErrors {
+  name?: string;
+  email?: string;
+  number?: string;
+  subject?: string;
+  message?: string;
+}
+
+interface FormDataType {
+  name: string;
+  email: string;
+  number: string;
+  subject: string;
+  message: string;
+}
 
 export default function ContactPage() {
-  const serverUrl = process.env.NEXT_PUBLIC_API_URL;
+  const serverUrl = process.env.NEXT_PUBLIC_API_URL ?? "";
   const [loading, setLoading] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormDataType>({
     name: "",
     email: "",
     number: "",
@@ -20,32 +37,37 @@ export default function ContactPage() {
     message: "",
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const validate = () => {
-    const newErrors = {};
+    const newErrors: FormErrors = {};
+
     if (!formData.name.trim()) newErrors.name = "Name is required.";
+
     if (!formData.email.trim()) {
       newErrors.email = "Email is required.";
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = "Email is invalid.";
     }
+
     if (!formData.number.trim()) {
       newErrors.number = "Phone number is required.";
     } else if (!/^\d{10}$/.test(formData.number)) {
       newErrors.number = "Phone must be 10 digits.";
     }
+
     if (!formData.subject.trim()) newErrors.subject = "Subject is required.";
     if (!formData.message.trim()) newErrors.message = "Message is required.";
+
     return newErrors;
   };
 
-  const handleChange = (e) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const validationErrors = validate();
     setErrors(validationErrors);
@@ -69,8 +91,8 @@ export default function ContactPage() {
             message: "",
           });
         }
-      } catch (error) {
-        if (error.response?.status === 400) {
+      } catch (error: any) {
+        if (error?.response?.status === 400) {
           alert(error.response.data.message);
         } else {
           alert("Failed to send message. Please try again.");

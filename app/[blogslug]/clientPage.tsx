@@ -18,9 +18,7 @@ export default function ClientPage({ blogslug }: { blogslug: string }) {
     dispatch(fetchBlogs());
   }, [dispatch]);
 
-  useEffect(() => {
-    console.log("Single Blog:", blog);
-  }, [blog]);
+  
 
   if (!blog) {
     return (

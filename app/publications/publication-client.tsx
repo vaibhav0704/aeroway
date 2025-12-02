@@ -3,30 +3,34 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import axios from "axios";
 import { motion } from "framer-motion";
+import axios from "axios";
 
 interface Magazine {
+  magazine_id: number;
   idMagazines: number;
   magazine_title: string;
-  magazine_slug: string;
+  magazine_description: string;
+  magazine_tags?: string;
   magazine_cover_image: string;
+  magazine_link?: string;
+  magazine_slug: string;
+  formatted_date: string;
+  magazine_category?: string;
+  MagCloudLink?: string;
 }
 
 export default function PublicationsClient() {
-  const serverUrl = process.env.NEXT_PUBLIC_API_URL;
   const [loading, setLoading] = useState<boolean>(false);
   const [magazine, setMagazine] = useState<Magazine[]>([]);
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [visibleCount, setVisibleCount] = useState<number>(6);
   const itemsPerLoad = 6;
 
   useEffect(() => {
     async function fetchAllData() {
       setLoading(true);
       try {
-        const response = await axios.get(
-          `${serverUrl}/magazine/fetchallmagazine`
-        );
+        const response = await axios.get("/api/magazine/fetchall");
         if (response.status === 200) {
           setMagazine(response.data);
         }
@@ -38,7 +42,7 @@ export default function PublicationsClient() {
     }
 
     fetchAllData();
-  }, [serverUrl]);
+  }, []);
 
   const loadMoreMagazines = () =>
     setVisibleCount((prev) => prev + itemsPerLoad);
@@ -58,7 +62,7 @@ export default function PublicationsClient() {
                 key={item.idMagazines}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                whileHover={{ scale: 1.05 ,animationDuration:0.1}}
+                whileHover={{ scale: 1.05, animationDuration: 0.1 }}
                 transition={{
                   duration: 0.4,
                   delay: index * 0.08,
@@ -70,7 +74,6 @@ export default function PublicationsClient() {
                   className="scale-100 hover:scale-105 transition-transform duration-100"
                 >
                   <h4 className="mt-4 transition">{item.magazine_title}</h4>
-
                   <div className="overflow-hidden shadow-lg hover:shadow-xl w-fit transition-all duration-300">
                     <Image
                       src={item.magazine_cover_image}

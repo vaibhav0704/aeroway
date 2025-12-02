@@ -6,14 +6,29 @@ import { AppDispatch, RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-export default function CategoryClientPage({ category }: { category: string }) {
+// Helper to generate slug from name
+const generateSlug = (str: string) => {
+  return str
+    .toLowerCase()
+    .replace(/'/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+};
+
+interface CategoryClientPageProps {
+  category: string;
+}
+
+export default function CategoryClientPage({ category }: CategoryClientPageProps) {
   const dispatch = useDispatch<AppDispatch>();
   const blogs = useSelector((state: RootState) => state.blogs.blogs);
   const [visibleCards, setVisibleCards] = useState(6);
-  
-  const categoryBlogs = blogs.filter((b) => b.category_slug === category);
 
-  
+  // Filter blogs by category slug
+  const categoryBlogs = blogs.filter(
+    (b) => generateSlug(b.category_name) === category
+  );
+
   const showMore = () => {
     if (visibleCards >= categoryBlogs.length) {
       setVisibleCards(6);
@@ -22,16 +37,9 @@ export default function CategoryClientPage({ category }: { category: string }) {
     }
   };
 
-  
   useEffect(() => {
     dispatch(fetchBlogs());
   }, [dispatch]);
-
-
-  useEffect(() => {
-    console.log("All Blogs: ", blogs);
-    console.log("Category Blogs:", categoryBlogs);
-  }, [categoryBlogs, blogs]);
 
 
   if (categoryBlogs.length === 0) {
@@ -49,7 +57,7 @@ export default function CategoryClientPage({ category }: { category: string }) {
           {categoryBlogs[0].category_name || "No Result found"}
         </h1>
 
-        <div className="flex justify-between  flex-col gap-8">
+        <div className="flex justify-between flex-col gap-8">
           {/* Blog Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 gap-x-0">
             {categoryBlogs.slice(0, visibleCards).map((blog) => (
@@ -57,7 +65,6 @@ export default function CategoryClientPage({ category }: { category: string }) {
             ))}
           </div>
 
-    
           <div className="flex justify-center mt-6">
             <button
               onClick={showMore}

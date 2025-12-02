@@ -1,3 +1,4 @@
+// src/redux/authSlice.ts
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 interface AuthState {
@@ -24,10 +25,8 @@ const authSlice = createSlice({
       return { ...state, ...action.payload };
     },
 
-    editUser(state, action: PayloadAction<any>) {
-      state.profile = action.payload.profile;
-      state.username = action.payload.username;
-      state.bio = action.payload.bio;
+    editUser(state, action: PayloadAction<Partial<AuthState>>) {
+      return { ...state, ...action.payload }; // Merge updated user data
     },
   },
 });

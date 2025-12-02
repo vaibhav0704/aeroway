@@ -1,13 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
-
 export const fetchLatestPosts = createAsyncThunk(
   "posts/latest",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`${API}/blog/latestblog`);
+      const { data } = await axios.get("/api/blogs/fetchlatest");
       return data;
     } catch (err: any) {
       return rejectWithValue("Failed to fetch latest posts");
@@ -17,12 +15,13 @@ export const fetchLatestPosts = createAsyncThunk(
 
 interface PostState {
   latestPosts: any[];
-  latestStatus?: string;
+  latestStatus?: "idle" | "loading" | "succeeded" | "failed";
   latestError?: string | null;
 }
 
 const initialState: PostState = {
   latestPosts: [],
+  latestStatus: "idle",
   latestError: null,
 };
 

@@ -1,14 +1,11 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const API = process.env.NEXT_PUBLIC_API_URL;
-
-// FETCH ALL BLOGS
 export const fetchBlogs = createAsyncThunk(
   "blogs/fetchBlogs",
   async (_, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`${API}/blog/fetchblog`);
+      const { data } = await axios.get("/api/blogs/fetch");
       return Array.isArray(data) ? data : [];
     } catch (error: any) {
       return rejectWithValue(error.response?.data || "Failed to fetch blogs");
@@ -16,21 +13,23 @@ export const fetchBlogs = createAsyncThunk(
   }
 );
 
-// INDIVIDUAL BLOG
 export const getIndividualBlog = createAsyncThunk(
   "blogs/getIndividual",
-  async (slug: string) => {
-    const { data } = await axios.get(`${API}/blog/individualBlog/${slug}`);
-    return data;
+  async (slug: string, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.get(`/api/blogs/fetch/${slug}`);
+      return data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Failed to fetch blog");
+    }
   }
 );
 
-// CATEGORY BLOGS
 export const fetchBlogByCategory = createAsyncThunk(
   "blogs/byCategory",
   async (categorySlug: string, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`${API}/blog/${categorySlug}`);
+      const { data } = await axios.get(`/api/blogs/fetchByCategory/${categorySlug}`);
       return data;
     } catch (err: any) {
       return rejectWithValue("Failed to fetch category blogs");
@@ -38,12 +37,11 @@ export const fetchBlogByCategory = createAsyncThunk(
   }
 );
 
-// TAG BLOGS
 export const getBlogsByTag = createAsyncThunk(
   "blogs/byTag",
   async (tag: string, { rejectWithValue }) => {
     try {
-      const { data } = await axios.get(`${API}/blog/related${tag}`);
+      const { data } = await axios.get(`/api/blogs/fetchByTag/${tag}`);
       return data;
     } catch (err: any) {
       return rejectWithValue("Failed to fetch tagged blogs");
@@ -69,6 +67,7 @@ const blogSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+    
       .addCase(fetchBlogs.pending, (state) => {
         state.status = "loading";
       })
@@ -81,14 +80,17 @@ const blogSlice = createSlice({
         state.error = action.payload as string;
       })
 
+      // individual blog
       .addCase(getIndividualBlog.fulfilled, (state, action) => {
         state.blogs = action.payload;
       })
 
+      // fetch by category
       .addCase(fetchBlogByCategory.fulfilled, (state, action) => {
         state.blogs = action.payload;
       })
 
+      // fetch by tag
       .addCase(getBlogsByTag.fulfilled, (state, action) => {
         state.blogs = action.payload;
       });

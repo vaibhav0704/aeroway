@@ -1,5 +1,3 @@
-import CheckAuth from "./components/check-auth";
-import DebugRedux from "./components/data";
 import Section2 from "./components/home/section2";
 import Section3 from "./components/home/sections3";
 import Text from "./components/home/text";
@@ -7,7 +5,7 @@ import Quiz from "./components/quiz";
 
 export default function Home() {
   return (
-    <div className="flex flex-col p-6 md:p-10 xl:px-20 min-h-screen items-center justify-center bg-[#f9fbff] pt-8 xl:max-w-[4xl] text-justify gap-20 font-sans dark:bg-black">
+    <div className="flex flex-col p-6 md:p-10 xl:px-20 min-h-screen items-center justify-center bg-[#f9fbff] pt-8 xl:max-w-[4xl] xl:pt-40 text-justify gap-20 font-sans dark:bg-black">
       <Text />
       <section>
         <div>
@@ -53,8 +51,6 @@ export default function Home() {
         </div>
         <Quiz/>
       </section>
-      <CheckAuth/>
-      {/* <DebugRedux /> */}
     </div>
   );
 }

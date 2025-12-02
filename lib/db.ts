@@ -1,8 +1,8 @@
 import mysql from "mysql2/promise";
 
-let pool;
+let pool: mysql.Pool;
 
-export function getDB() {
+export function getDB(): mysql.Pool {
   if (!pool) {
     pool = mysql.createPool({
       host: process.env.DB_HOST,

@@ -7,7 +7,7 @@ import axios from "axios";
 import ConfettiExplosion from "react-confetti-explosion";
 import { ImCross } from "react-icons/im";
 import { TiTick } from "react-icons/ti";
-import type { RootState } from "@/store/store";
+import { RootState } from "@/redux/store";
 
 interface QuizQuestion {
   _id: string;
@@ -31,14 +31,13 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
 
   const auth = useSelector((state: RootState) => state.auth);
   const router = useRouter();
-  const isMobileWidth = typeof window !== "undefined" ? window.innerWidth < 1024 : false;
+  const isMobileWidth =
+    typeof window !== "undefined" ? window.innerWidth < 1024 : false;
 
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await axios.get<QuizQuestion[]>(
-          `${process.env.NEXT_PUBLIC_API_URL}/quiz/get-quiz`
-        );
+        const response = await axios.get<QuizQuestion[]>(`/api/quiz/get-quiz`);
         setQuestions(response.data);
         const randomNum = Math.floor(Math.random() * response.data.length);
         setCurrentQuestion(randomNum);
@@ -51,10 +50,11 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
 
   const handleClickOption = async (index: number) => {
     if (!auth.userId) {
-      window.scrollTo(0, 0);
       router.push("/login");
       return;
     }
+
+    if (selectedOption !== null) return; // prevent double request
 
     const correct = index === questions[currentQuestion].correctAnswer;
 
@@ -72,10 +72,7 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
     };
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/quiz/quiz-analytic-save`,
-        sendData
-      );
+      const response = await axios.post("/api/quiz/analytic-save", sendData);
       if (response.status === 200 && setAnalyticUpdate) {
         setAnalyticUpdate((prev) => (typeof prev === "number" ? prev + 1 : 1));
       }
@@ -85,7 +82,7 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
     }
 
     setSelectedOption(index + 1);
-    setPlayedQuestion(playedQuestion + 1);
+    setPlayedQuestion((prev) => prev + 1);
   };
 
   const handleNextQuestion = () => {
@@ -100,7 +97,7 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
     }
 
     if (selectedOption === questions[currentQuestion].correctAnswer) {
-      setScore(score + 1);
+      setScore((prev) => prev + 1);
     }
 
     setSelectedOption(null);
@@ -111,30 +108,29 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
   const question = questions[currentQuestion];
 
   return (
-    <div className="container mx-auto px-4 py-10 relative">
+    <div className="container xl:max-w-7xl mx-auto px-4 py-10 xl:px-10 relative">
       {isExploding && typeof window !== "undefined" && (
         <div className="w-full h-full flex justify-center items-center absolute top-0 left-0 z-50">
           <ConfettiExplosion
             width={window.innerWidth}
             height={window.innerHeight}
-            numberOfPieces={isMobileWidth ? 20 : 100}
-            explosionSpeed={1}
-            explosionRadius={100}
-            explosionColor="#000000"
+            particleCount={isMobileWidth ? 20 : 100}
+            force={0.7}
+            duration={3000}
+            colors={["#000000"]}
           />
         </div>
       )}
 
-      
-
       {question && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-          {/* Left: Question */}
           <div>
-            <h2 className="text-2xl font-semibold mb-2">Question:</h2>
+            <h2 className="text-4xl font-semibold bg-linear-to-r from-orange-600 via-orange-300 to-orange-300 text-transparent bg-clip-text mb-2">
+  Question:
+</h2>
             <p className="text-gray-700 mb-4">{question.question}</p>
 
-            {selectedOption && (
+            {selectedOption && question.explanation && (
               <div className="mt-4 p-3 border rounded bg-gray-50">
                 <p className="font-medium">Explanation:</p>
                 <p className="text-gray-600">{question.explanation}</p>
@@ -142,7 +138,6 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
             )}
           </div>
 
-          {/* Right: Options */}
           <div className="flex flex-col gap-4">
             {question.options.map((option, index) => (
               <QuizOption
@@ -157,7 +152,7 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
 
             <button
               onClick={handleNextQuestion}
-              className="mt-4 py-2 px-4 rounded bg-blue-600 text-white hover:bg-blue-700 transition"
+              className="mt-4 py-2 px-4 w-fit rounded bg-linear-to-r text-white from-orange-600 to-orange-300 transition"
             >
               Next
             </button>
@@ -199,10 +194,15 @@ const QuizOption: React.FC<QuizOptionProps> = ({
     <label
       className="flex justify-between items-center border p-3 rounded cursor-pointer transition"
       style={{ backgroundColor: getBgColor(), borderColor: getBorderColor() }}
-      onClick={!selectedOption ? handleClickOption : undefined}
     >
       <div className="flex items-center gap-3">
-        <input type="radio" name="option" checked={selected} readOnly />
+        <input
+          type="radio"
+          name="option"
+          checked={selected}
+          readOnly
+          onClick={() => !selectedOption && handleClickOption()}
+        />
         <p className="text-gray-800 font-medium">{text}</p>
       </div>
 

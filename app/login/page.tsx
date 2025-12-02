@@ -1,13 +1,17 @@
 "use client";
 
+import { saveLoggedInUser } from "@/redux/action";
+import { AppDispatch } from "@/redux/store";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 export default function LoginPage() {
   const router = useRouter();
+  const dispatch=useDispatch<AppDispatch>();
 
   const [values, setValues] = useState({
     emailOrUsername: "",
@@ -22,32 +26,30 @@ export default function LoginPage() {
     setValues((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrors("");
 
-    axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}/user/login`, values)
-      .then((res) => {
-        
-        if (res.data.success) {
-           console.log("Hello");
-          if (typeof window !== "undefined") {
-            if (rememberMe) {
-             
-              localStorage.setItem("token", res.data.token);
-            } else {
-              sessionStorage.setItem("token", res.data.token);
-            }
+    try {
+      const res = await axios.post("/api/auth/login", values);
+
+      if (res.data.Success) {
+        if (typeof window !== "undefined") {
+          if (rememberMe) {
+            localStorage.setItem("token", res.data.token);
+          } else {
+            sessionStorage.setItem("token", res.data.token);
           }
-          console.log(res.data.token)
-          router.push("/");
-        } else {
-          setErrors(res.data.Error);
         }
-      })
-      .catch(() => {
-        setErrors("Something went wrong");
-      });
+        dispatch(saveLoggedInUser());
+
+        router.push("/");
+      } else {
+        setErrors(res.data.Error);
+      }
+    } catch (err: any) {
+      setErrors(err.response?.data?.Error || "Something went wrong");
+    }
   };
 
   return (
@@ -77,6 +79,7 @@ export default function LoginPage() {
                   onChange={handleInput}
                   className="w-full border lg:w-[70%] border-gray-300 rounded-md px-4 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                   placeholder="Enter email or username"
+                  required
                 />
               </div>
 
@@ -88,6 +91,7 @@ export default function LoginPage() {
                   onChange={handleInput}
                   className="w-full border lg:w-[70%] border-gray-300 rounded-md px-4 py-1 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
                   placeholder="Enter password"
+                  required
                 />
               </div>
 
