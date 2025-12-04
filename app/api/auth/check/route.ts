@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
 
     if (!token) {
       console.log("No token found");
-      return NextResponse.json({ Error: "No token found" }, { status: 401 });
+      return NextResponse.json({ message: "You are not logged in" }, { status: 401 });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY!) as {

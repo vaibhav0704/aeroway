@@ -5,6 +5,7 @@ import InfoCard from "./info-card";
 import PopularPostCard from "./popular-post-card";
 import { RootState } from "@/redux/store";
 import PopularPosts from "./popular-posts";
+import Link from "next/link";
 
 const iconPath = "/icon.png";
 
@@ -18,14 +19,15 @@ const Section3 = () => {
       <div className="flex-1">
         <div className="grid md:grid-cols-2 gap-4">
           {limitedBlogs.map((blog) => (
-            <InfoCard
+            <Link key={blog.blog_id} href={blog.blog_slug}>
+               <InfoCard
               key={blog.blog_id}
               text={blog.blog_title}
               date={blog.formatted_date}
-              onReadMore={() =>
-                (window.location.href = `/blog/${blog.blog_slug}`)
-              }
+              
             />
+            </Link>
+           
           ))}
         </div>
       </div>

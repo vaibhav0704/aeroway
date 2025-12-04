@@ -11,10 +11,10 @@ const Section2 = () => {
   const [visibleCards, setVisibleCards] = useState(6);
   const dispatch = useDispatch<AppDispatch>();
 
-  // ✅ Correct selector based on your slice structure
+
   const blogs = useSelector((state: RootState) => state.blogs.blogs || []);
 
-  // 🚀 Fetch blogs on mount
+  
   useEffect(() => {
     dispatch(fetchBlogs());
   }, [dispatch]);
@@ -27,7 +27,7 @@ const Section2 = () => {
     }
   };
 
-  // Motion variants for cards
+  
   const cardVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: (i: number) => ({

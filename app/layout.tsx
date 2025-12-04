@@ -32,7 +32,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased `}
       >
         <Providers>
-          <div className="bg-[#f9fafb]">
+          <div className="bg-[#f9fafb] flex flex-col justify-evenly min-h-screen">
             <Header />
             {children}
             <Footer />

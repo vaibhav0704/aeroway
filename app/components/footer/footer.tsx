@@ -7,7 +7,7 @@ import { LuMails } from "react-icons/lu";
 
 const Footer = () => {
   return (
-    <footer className="w-full p-10 lg:p-20 text-[#4e658a] font-bold opacity-75 ">
+    <footer className="w-full relative bottom-0 p-10 lg:p-20 text-[#4e658a] font-bold opacity-75 ">
       <div className="max-w-7xl bg-[#e8edf5] border-2 border-[#c2d4ee] rounded-4xl mx-auto px-6 py-10 lg:p-20 grid grid-cols-1 md:grid-cols-[1.5fr_1fr_1fr_1fr] gap-10">
         <div className="flex flex-col gap-4">
           <Link

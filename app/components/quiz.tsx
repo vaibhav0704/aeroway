@@ -108,7 +108,7 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
   const question = questions[currentQuestion];
 
   return (
-    <div className="container xl:max-w-7xl mx-auto px-4 py-10 xl:px-10 relative">
+    <div className="container max-w-screen xl:max-w-7xl mx-auto px-4 py-10 xl:px-10 relative">
       {isExploding && typeof window !== "undefined" && (
         <div className="w-full h-full flex justify-center items-center absolute top-0 left-0 z-50">
           <ConfettiExplosion
@@ -126,8 +126,8 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
           <div>
             <h2 className="text-4xl font-semibold bg-linear-to-r from-orange-600 via-orange-300 to-orange-300 text-transparent bg-clip-text mb-2">
-  Question:
-</h2>
+              Question:
+            </h2>
             <p className="text-gray-700 mb-4">{question.question}</p>
 
             {selectedOption && question.explanation && (

@@ -2,6 +2,7 @@ import Section2 from "./components/home/section2";
 import Section3 from "./components/home/sections3";
 import Text from "./components/home/text";
 import Quiz from "./components/quiz";
+import DashYourMove from "./components/quiz/dash-your-move";
 
 export default function Home() {
   return (
@@ -50,6 +51,7 @@ export default function Home() {
           </p>
         </div>
         <Quiz/>
+        <DashYourMove/>
       </section>
     </div>
   );
