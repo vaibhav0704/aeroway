@@ -14,7 +14,6 @@ import {
   Filler
 } from "chart.js";
 
-
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -32,7 +31,6 @@ interface DailyResult {
   wrong_count: string | number;
 }
 
-
 interface LineChartProps {
   dailyResults: DailyResult[];
 }
@@ -44,17 +42,23 @@ const LineChart: React.FC<LineChartProps> = ({ dailyResults }) => {
 
   const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
 
-  const correctCounts: number[] = Array.from({ length: daysInMonth }, () => 0);
-  const wrongCounts: number[] = Array.from({ length: daysInMonth }, () => 0);
+
+  const labels = Array.from({ length: daysInMonth }, (_, i) => i + 1).filter(day => day % 2 !== 0);
+
+  const correctCountsAll: number[] = Array.from({ length: daysInMonth }, () => 0);
+  const wrongCountsAll: number[] = Array.from({ length: daysInMonth }, () => 0);
 
   dailyResults.forEach((result) => {
     const dayIndex = result.day - 1;
-    correctCounts[dayIndex] = Number(result.correct_count);
-    wrongCounts[dayIndex] = Number(result.wrong_count);
+    correctCountsAll[dayIndex] = Number(result.correct_count);
+    wrongCountsAll[dayIndex] = Number(result.wrong_count);
   });
 
+  const correctCounts = labels.map(day => correctCountsAll[day - 1]);
+  const wrongCounts = labels.map(day => wrongCountsAll[day - 1]);
+
   const data = {
-    labels: Array.from({ length: daysInMonth }, (_, i) => (i + 1).toString()),
+    labels,
     datasets: [
       {
         label: "Correct Answers",
@@ -64,7 +68,7 @@ const LineChart: React.FC<LineChartProps> = ({ dailyResults }) => {
         borderColor: "#d66d27",
       },
       {
-        label: "Wrong Answer",
+        label: "Wrong Answers",
         data: wrongCounts,
         fill: false,
         backgroundColor: "rgba(75,192,192,0.2)",

@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
+import { RowDataPacket } from "mysql2";
 
-interface AnalyticsItem {
+// ---------- Types ----------
+interface AnalyticsItem extends RowDataPacket {
   period?: string;
   correct_count: number;
   wrong_count: number;
@@ -16,14 +18,15 @@ interface AnalyticsState {
   currentYear: AnalyticsItem[];
 }
 
+// ---------- Handler ----------
 export async function GET(
   req: NextRequest,
-  context: { params: Promise<{ id: string }> } 
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
-  
     const params = await context.params;
     const userId = params?.id;
+
     if (!userId) {
       return NextResponse.json({ error: "User ID missing" }, { status: 400 });
     }
@@ -33,6 +36,7 @@ export async function GET(
     const currentYear = currentDate.getFullYear();
     const currentMonth = currentDate.getMonth() + 1;
 
+    // ---------------- SQL QUERIES ----------------
     const sqlCurrentDay = `
       SELECT DATE(created_at) AS period,
              CAST(SUM(CASE WHEN correct = 1 THEN 1 ELSE 0 END) AS UNSIGNED) AS correct_count,
@@ -82,14 +86,20 @@ export async function GET(
       GROUP BY YEAR(created_at)
     `;
 
-    
-    const [dayRows]: [AnalyticsItem[], any] = await db.query(sqlCurrentDay, [userId]);
-    const [weekRows]: [AnalyticsItem[], any] = await db.query(sqlCurrentWeek, [userId]);
-    const [monthRows]: [AnalyticsItem[], any] = await db.query(sqlCurrentMonth, [userId, currentYear, currentMonth]);
-    const [yearRows]: [AnalyticsItem[], any] = await db.query(sqlCurrentYear, [userId, currentYear]);
+    // ---------- Execute queries with proper typing ----------
+    const [dayRows] = await db.query<AnalyticsItem[]>(sqlCurrentDay, [userId]);
+    const [weekRows] = await db.query<AnalyticsItem[]>(sqlCurrentWeek, [userId]);
+    const [monthRows] = await db.query<AnalyticsItem[]>(sqlCurrentMonth, [
+      userId,
+      currentYear,
+      currentMonth,
+    ]);
+    const [yearRows] = await db.query<AnalyticsItem[]>(sqlCurrentYear, [
+      userId,
+      currentYear,
+    ]);
 
-   
-
+    // ---------- Response ----------
     const response: AnalyticsState = {
       currentDay: dayRows,
       currentWeek: weekRows,

@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   try {
     const db = await getDB();
 
-    // Read token from cookies
+
     const token = req.cookies.get("token")?.value;
 
     if (!token) {

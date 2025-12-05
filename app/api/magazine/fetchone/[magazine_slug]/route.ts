@@ -15,10 +15,12 @@ export interface Magazine {
   MagCloudLink?: string;
 }
 
-export async function GET(req: NextRequest, context: { params: { magazine_slug: string } }) {
+export async function GET(req: NextRequest,
+  context: { params: Promise<{magazine_slug: string }> } ) {
   try {
-    const params = await context.params;
-    const { magazine_slug } = params;
+     const params = await context.params;
+    const {magazine_slug}  = params;
+
 
     const db = getDB();
     const sql = `
@@ -39,6 +41,7 @@ export async function GET(req: NextRequest, context: { params: { magazine_slug: 
 
     const [rows] = await db.query<RowDataPacket[]>(sql, [magazine_slug]);
     const results = rows as Magazine[];
+    console.log(results);
 
     if (results.length === 0) {
       return NextResponse.json({ error: "Magazine Not Found" }, { status: 404 });

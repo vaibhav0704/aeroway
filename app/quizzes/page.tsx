@@ -14,7 +14,7 @@ interface QuizQuestion {
   _id: string;
   question: string;
   options: string[];
-  correctAnswer: number;
+  correctAnswer: number; // index (0-based)
   explanation?: string;
 }
 
@@ -24,26 +24,32 @@ interface QuizProps {
 
 const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
-  const [currentQuestion, setCurrentQuestion] = useState<number>(0);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
-  const [score, setScore] = useState<number>(0);
-  const [playedQuestion, setPlayedQuestion] = useState<number>(0);
-  const [isExploding, setIsExploding] = useState<boolean>(false);
+  const [score, setScore] = useState(0);
+  const [isExploding, setIsExploding] = useState(false);
 
   const auth = useSelector((state: RootState) => state.auth);
   const router = useRouter();
 
+  const isMobile =
+    typeof window !== "undefined" ? window.innerWidth < 1024 : false;
+
+  // FETCH QUIZ DATA
   useEffect(() => {
     const fetchQuizData = async () => {
       try {
-        const response = await axios.get<QuizQuestion[]>(`/api/quiz/get-quiz`);
-        setQuestions(response.data);
-        const randomNum = Math.floor(Math.random() * response.data.length);
-        setCurrentQuestion(randomNum);
-      } catch (error) {
-        console.error("Error fetching quiz data:", error);
+        const res = await axios.get<QuizQuestion[]>(`/api/quiz/get-quiz`);
+        setQuestions(res.data);
+
+        // random question
+        const randomIndex = Math.floor(Math.random() * res.data.length);
+        setCurrentQuestion(randomIndex);
+      } catch (err) {
+        console.error("Error fetching quiz data:", err);
       }
     };
+
     fetchQuizData();
   }, []);
 
@@ -53,13 +59,14 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
       return;
     }
 
+    // prevent double clicking
     if (selectedOption !== null) return;
 
     const correct = index === questions[currentQuestion].correctAnswer;
 
     if (correct) {
       setIsExploding(true);
-      setTimeout(() => setIsExploding(false), 3000);
+      setTimeout(() => setIsExploding(false), 3500);
     }
 
     const sendData = {
@@ -71,17 +78,17 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
     };
 
     try {
-      const response = await axios.post("/api/quiz/analytic-save", sendData);
-      if (response.status === 200 && setAnalyticUpdate) {
+      const resp = await axios.post("/api/quiz/analytic-save", sendData);
+
+      if (resp.status === 200 && setAnalyticUpdate) {
         setAnalyticUpdate((prev) => (typeof prev === "number" ? prev + 1 : 1));
       }
-    } catch (error) {
+    } catch (err) {
+      console.error("Error saving analytic:", err);
       alert("Error while saving quiz");
-      console.error("Error saving quiz:", error);
     }
 
-    setSelectedOption(index + 1);
-    setPlayedQuestion((prev) => prev + 1);
+    setSelectedOption(index);
   };
 
   const handleNextQuestion = () => {
@@ -95,13 +102,16 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
       return;
     }
 
+    // add score
     if (selectedOption === questions[currentQuestion].correctAnswer) {
       setScore((prev) => prev + 1);
     }
 
     setSelectedOption(null);
-    const randomNum = Math.floor(Math.random() * questions.length);
-    setCurrentQuestion(randomNum);
+
+    // new random question
+    const randomIndex = Math.floor(Math.random() * questions.length);
+    setCurrentQuestion(randomIndex);
   };
 
   const question = questions[currentQuestion];
@@ -111,14 +121,18 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="container max-w-full sm:max-w-7xl mx-auto px-2 xs:px-3 sm:px-4 lg:px-8 py-6 sm:py-10 relative"
+      className="container max-w-screen xl:max-w-7xl mx-auto px-4 py-10 xl:px-10 relative"
     >
-      {/* HEADER */}
-      <div className="text-center mb-6 sm:mb-10">
-        <h1 className="text-3xl xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-2 sm:mb-4 bg-gradient-to-r from-orange-800 via-orange-600 to-orange-100 bg-clip-text text-transparent">
+      {/* Heading */}
+      <div className="mb-10 text-center">
+        <h4
+          className="text-6xl mb-3 
+          bg-linear-to-r from-orange-600 via-orange-500 to-orange-200
+          text-transparent bg-clip-text"
+        >
           Quiz
-        </h1>
-        <p className="text-slate-400 text-xs xs:text-sm sm:text-base md:text-lg">
+        </h4>
+        <p className="text-slate-500 text-lg">
           Test your knowledge and gain valuable insights
         </p>
       </div>
@@ -129,55 +143,57 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
           <ConfettiExplosion
             width={window.innerWidth}
             height={window.innerHeight}
-            particleCount={window.innerWidth < 768 ? 20 : 100}
+            particleCount={isMobile ? 20 : 100}
             force={0.7}
             duration={3000}
-            colors={["#000000"]}
           />
         </div>
       )}
 
+      {/* MAIN QUIZ */}
       {question && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xs:gap-2 sm:gap-6 lg:gap-10">
-          {/* Question Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          {/* LEFT: QUESTION */}
           <motion.div
-            initial={{ opacity: 0, x: -10 }}
+            initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <h2 className="text-xl xs:text-lg sm:text-2xl md:text-3xl lg:text-4xl font-semibold mb-2 sm:mb-4 bg-gradient-to-r from-orange-600 via-orange-300 to-orange-300 text-transparent bg-clip-text">
+            <h2 className="text-4xl font-semibold bg-linear-to-r from-orange-600 via-orange-300 to-orange-300 text-transparent bg-clip-text mb-4">
               Question:
             </h2>
-            <p className="text-gray-700 text-xs xs:text-sm sm:text-base md:text-lg leading-relaxed mb-4 sm:mb-6">
+
+            <p className="text-gray-700 mb-4 text-lg leading-relaxed">
               {question.question}
             </p>
 
-            {selectedOption && question.explanation && (
+            {/* Explanation */}
+            {selectedOption !== null && question.explanation && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="p-2 xs:p-3 sm:p-4 rounded-xl bg-gray-50 shadow-md"
+                className="mt-4 p-4 rounded-xl bg-gray-50 shadow-md"
               >
-                <p className="font-medium text-gray-800 text-xs xs:text-sm sm:text-base">Explanation:</p>
-                <p className="text-gray-600 text-xs xs:text-sm sm:text-base mt-1">{question.explanation}</p>
+                <p className="font-medium text-gray-800">Explanation:</p>
+                <p className="text-gray-600 mt-1">{question.explanation}</p>
               </motion.div>
             )}
           </motion.div>
 
-          {/* Options Section */}
+          {/* RIGHT: OPTIONS */}
           <motion.div
-            initial={{ opacity: 0, x: 10 }}
+            initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
-            className="flex flex-col gap-2 xs:gap-2 sm:gap-4"
+            className="flex flex-col gap-4"
           >
             {question.options.map((option, index) => (
               <QuizOption
                 key={index}
                 text={option}
-                selected={selectedOption === index + 1}
-                correct={index === question.correctAnswer}
+                index={index}
                 selectedOption={selectedOption}
+                correctIndex={question.correctAnswer}
                 handleClickOption={() => handleClickOption(index)}
               />
             ))}
@@ -186,7 +202,7 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.03 }}
               onClick={handleNextQuestion}
-              className="mt-4 xs:mt-3 sm:mt-6 py-2 xs:py-2 sm:py-3 px-4 xs:px-3 sm:px-6 rounded-xl bg-gradient-to-r from-orange-600 to-orange-300 text-white shadow-lg transition text-xs xs:text-sm sm:text-base md:text-lg"
+              className="mt-4 py-3 px-6 rounded-xl bg-linear-to-r text-white from-orange-600 to-orange-300 shadow-lg transition font-medium"
             >
               Next
             </motion.button>
@@ -198,41 +214,47 @@ const Quiz: React.FC<QuizProps> = ({ setAnalyticUpdate }) => {
 };
 
 interface QuizOptionProps {
-  selected: boolean;
-  correct: boolean;
-  selectedOption: number | null;
-  handleClickOption: () => void;
   text: string;
+  index: number;
+  selectedOption: number | null;
+  correctIndex: number;
+  handleClickOption: () => void;
 }
 
 const QuizOption: React.FC<QuizOptionProps> = ({
-  selected,
-  correct,
-  selectedOption,
-  handleClickOption,
   text,
+  index,
+  selectedOption,
+  correctIndex,
+  handleClickOption,
 }) => {
-  const getBgColor = () => {
-    if (selected) return correct ? "#d1fae5" : "#fee2e2";
-    if (selectedOption && correct) return "#d1fae5";
-    return "#ffffff";
-  };
+  const isSelected = selectedOption === index;
+  const isCorrect = correctIndex === index;
+
+  const bg = isSelected
+    ? isCorrect
+      ? "bg-green-100"
+      : "bg-red-100"
+    : selectedOption !== null && isCorrect
+    ? "bg-green-100"
+    : "bg-white";
 
   return (
     <motion.label
-      whileHover={{ scale: selectedOption ? 1 : 1.02 }}
+      whileHover={{ scale: selectedOption === null ? 1.02 : 1 }}
       transition={{ duration: 0.2 }}
-      className="flex justify-between items-center p-2 xs:p-2 sm:p-3 rounded-xl shadow-md cursor-pointer"
-      style={{ backgroundColor: getBgColor() }}
-      onClick={() => !selectedOption && handleClickOption()}
+      className={`flex justify-between items-center p-4 rounded-xl shadow-md cursor-pointer ${bg}`}
+      onClick={() => selectedOption === null && handleClickOption()}
     >
-      <div className="flex items-center gap-2 xs:gap-2 sm:gap-3">
-        <input type="radio" name="option" checked={selected} readOnly className="w-3 h-3 xs:w-3 xs:h-3 sm:w-4 sm:h-4" />
-        <p className="text-gray-800 text-xs xs:text-sm sm:text-base md:text-base font-medium">{text}</p>
+      <div className="flex items-center gap-3">
+        <input type="radio" checked={isSelected} readOnly />
+        <p className="text-gray-800 font-medium">{text}</p>
       </div>
 
-      {selected && !correct && <ImCross className="text-red-600" size={16} />}
-      {selectedOption && correct && <TiTick className="text-green-600" size={20} />}
+      {isSelected && !isCorrect && <ImCross className="text-red-600" size={20} />}
+      {selectedOption !== null && isCorrect && (
+        <TiTick className="text-green-600" size={24} />
+      )}
     </motion.label>
   );
 };

@@ -47,10 +47,12 @@ const AllPlayedQuiz: React.FC = () => {
     fetchDetailedAnalytics();
   }, [auth.userId]);
 
-
   const indexOfLastQuestion = currentPage * questionsPerPage;
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
-  const currentQuestions = detailedAnalytics.slice(indexOfFirstQuestion, indexOfLastQuestion);
+  const currentQuestions = detailedAnalytics.slice(
+    indexOfFirstQuestion,
+    indexOfLastQuestion
+  );
   const totalPages = Math.ceil(detailedAnalytics.length / questionsPerPage);
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
@@ -62,28 +64,38 @@ const AllPlayedQuiz: React.FC = () => {
     correctAnswer: number,
     choose_option: number
   ) => {
-    const selected = index + 1 === choose_option;
-    const correct = index === correctAnswer;
+    const selected = index + 1 == choose_option;
+    const isCorrectOption = index === correctAnswer;
 
     return (
       <div
         key={index}
-        className={`flex items-center gap-2 p-2 rounded border ${
-          selected ? (correct ? "bg-green-100 border-green-400" : "bg-red-100 border-red-400") : "border-gray-200"
-        }`}
+        className={`flex items-center justify-between gap-2 p-2 rounded border
+        ${
+          isCorrectOption
+            ? "bg-[rgb(212,237,218)] border-green-400"
+            : selected
+            ? "bg-[rgb(218,210,210)] border-red-400"
+            : "border-gray-200"
+        }
+      `}
       >
-        <input type="radio" name="option" checked={selected} readOnly />
-        <p className="text-sm">{option}</p>
-        {selected && !correct && <ImCross className="text-red-600" />}
-        {correct && <TiTick className="text-green-600" />}
+        <div className="flex gap-2" >
+          <input type="radio" checked={selected} readOnly />
+          <p className="text-sm">{option}</p>
+        </div>
+
+        {selected && !isCorrectOption && <ImCross className="text-red-600" />}
+
+        {isCorrectOption && <TiTick className="text-green-600" />}
       </div>
     );
   };
 
   const renderDetailedAnalytics = (data: QuizData, index: number) => (
     <div
-       key={`${data.quizId}-${data.created_at}-${index}`}
-      className="p-4 border rounded-lg shadow mb-4 bg-white"
+      key={`${data.quizId}-${data.created_at}-${index}`}
+      className="p-4  rounded-lg shadow mb-4 bg-[rgb(250,250,250)]"
     >
       <div className="flex justify-between items-center mb-2">
         <div className="flex gap-4 items-center">
@@ -95,7 +107,9 @@ const AllPlayedQuiz: React.FC = () => {
                 : "bg-red-200 text-red-800"
             }`}
           >
-            {data.choose_option - 1 === data.correctAnswer ? "Correct" : "Incorrect"}
+            {data.choose_option - 1 === data.correctAnswer
+              ? "Correct"
+              : "Incorrect"}
           </span>
         </div>
         <span className="text-sm text-gray-500">
@@ -118,7 +132,8 @@ const AllPlayedQuiz: React.FC = () => {
   );
 
   if (loading) return <div className="text-center py-10">Loading...</div>;
-  if (error) return <div className="text-center py-10 text-red-600">{error}</div>;
+  if (error)
+    return <div className="text-center py-10 text-red-600">{error}</div>;
 
   return (
     <div className="container mx-auto p-6 bg-white shadow-xl rounded-lg lg:mt-8 md:max-w-[60%] xl:max-w-[40%]">

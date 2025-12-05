@@ -17,13 +17,13 @@ const Profile = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <div className="bg-white shadow-lg rounded-lg p-6 max-w-3xl mx-auto">
+      <div className=" p-6 max-w-3xl mx-auto">
         <p className="text-2xl font-semibold mb-4">Profile Details</p>
         <hr className="mb-4" />
-        <table className="w-full text-left border-collapse">
+        <table className="w-full text-left text-lg border-[rgb(245,245,245)] border-collapse">
           <tbody>
-            <tr className="border-b">
-              <th className="py-2 px-4 font-medium">Profile</th>
+            <tr className="border-b-2  border-[rgb(245,245,245)]">
+              <th className="py-2 px-4 bg-[rgb(245,245,245)]  font-bold">Profile</th>
               <td className="py-2 px-4">
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 relative rounded-full overflow-hidden">
@@ -42,20 +42,20 @@ const Profile = () => {
                 </div>
               </td>
             </tr>
-            <tr className="border-b">
-              <th className="py-2 px-4 font-medium">About</th>
+            <tr className="border-b-2 border-[rgb(245,245,245)]">
+              <th className="py-2 bg-[rgb(245,245,245)] px-4 font-bold">About</th>
               <td className="py-2 px-4">{fullData.bio}</td>
             </tr>
-            <tr className="border-b">
-              <th className="py-2 px-4 font-medium">Profession</th>
+            <tr className="border-b-2  border-[rgb(245,245,245)]">
+              <th className="py-2 bg-[rgb(245,245,245)] px-4 font-bold">Profession</th>
               <td className="py-2 px-4">{fullData.profession}</td>
             </tr>
-            <tr className="border-b">
-              <th className="py-2 px-4 font-medium">Username</th>
+            <tr className="border-b-2 border-[rgb(245,245,245)]">
+              <th className="py-2 bg-[rgb(245,245,245)] px-4 font-bold">Username</th>
               <td className="py-2 px-4">{fullData.username}</td>
             </tr>
-            <tr>
-              <th className="py-2 px-4 font-medium">Email</th>
+            <tr className="border-b-2 border-[rgb(245,245,245)]" >
+              <th className="py-2 bg-[rgb(245,245,245)] px-4 font-bold">Email</th>
               <td className="py-2 px-4">{fullData.email}</td>
             </tr>
           </tbody>
@@ -63,7 +63,7 @@ const Profile = () => {
         <div className="mt-6 flex justify-end">
           <Link
             href="/edit-profile"
-            className="px-6 py-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white rounded-lg hover:from-blue-600 hover:to-blue-700 shadow-md transition-all"
+            className="px-6 py-2 bg-linear-to-r from-orange-600 to-orange-400 text-white rounded-lg hover:from-orange-400 hover:to-orange-700 shadow-md transition-transform duration-300 ease-in-out"
             onClick={scrollToTop}
           >
             Edit Profile
