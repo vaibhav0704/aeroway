@@ -35,7 +35,6 @@ export default function Setting() {
   const [errors, setErrors] = useState<ErrorsType>({});
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
-
   useEffect(() => {
     setFormData({
       name: fullData.name || "",
@@ -53,7 +52,6 @@ export default function Setting() {
     setErrors((prev) => ({ ...prev, [name]: value ? "" : "This field is required" }));
   };
 
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -70,7 +68,6 @@ export default function Setting() {
     setFormData((prev) => ({ ...prev, user_profile: "" }));
   };
 
-
   const validateForm = (): boolean => {
     const newErrors: ErrorsType = {};
     Object.keys(formData).forEach((key) => {
@@ -82,11 +79,43 @@ export default function Setting() {
     return Object.keys(newErrors).length === 0;
   };
 
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    dispatch(editUserProfile(fullData.userId!, formData));
+
+    try {
+      // Create FormData for multipart/form-data
+      const data = new FormData();
+      data.append("id", fullData.userId!);
+      data.append("name", formData.name);
+      data.append("username", formData.username);
+      data.append("email", formData.email);
+      data.append("profession", formData.profession);
+      data.append("bio", formData.bio);
+
+      if (formData.user_profile instanceof File) {
+        data.append("profile", formData.user_profile);
+      } else if (typeof formData.user_profile === "string") {
+        data.append("profile", formData.user_profile);
+      }
+
+      const response = await fetch("/api/auth/update-profile", {
+        method: "PUT",
+        body: data,
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) throw new Error(result.message || "Failed to update profile");
+
+      // Optionally update Redux state
+      dispatch({ type: "UPDATE_PROFILE_SUCCESS", payload: result });
+
+      alert("Profile updated successfully!");
+    } catch (error: any) {
+      console.error("Update profile error:", error);
+      alert(error.message || "Something went wrong");
+    }
   };
 
   return (
@@ -99,7 +128,9 @@ export default function Setting() {
               <img
                 src={
                   avatarPreview ||
-                  (fullData.profile ? fullData.profile : "https://aeroway.s3-eu-central-2.ionoscloud.com/frontend/cropped-cropped-Aeroway-one-favicon.png")
+                  (fullData.profile
+                    ? fullData.profile
+                    : "https://aeroway.s3-eu-central-2.ionoscloud.com/frontend/cropped-cropped-Aeroway-one-favicon.png")
                 }
                 alt="Avatar"
                 className="w-32 h-32 object-cover rounded-full ring-2 ring-indigo-300"
@@ -222,7 +253,7 @@ export default function Setting() {
           <div className="flex justify-end">
             <button
               type="submit"
-              className="px-6 py-2 bg-gradient-to-r from-orange-600 to-orange-300 text-white rounded-md hover:brightness-90 transition"
+              className="px-6 py-2 bg-linear-to-r from-orange-600 to-orange-300 text-white rounded-md hover:brightness-90 transition"
             >
               Update
             </button>
