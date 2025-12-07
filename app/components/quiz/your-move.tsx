@@ -1,15 +1,13 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { RxCross2 } from "react-icons/rx";
-import { IoMdCheckmark } from "react-icons/io";
-import { useSelector } from "react-redux";
+import type { RootState } from "@/redux/store";
 import axios from "axios";
 import Link from "next/link";
-import type { RootState } from "@/redux/store";
-import QuizAnalytics from "./quiz-analytics";
-import LineChart from "./line-chart";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import DoughnutChart from "./doughnut";
+import LineChart from "./line-chart";
+import QuizAnalytics from "./quiz-analytics";
 
 interface AnalyticResponse {
   dailyResults?: any[];
@@ -48,7 +46,7 @@ export default function YourMove({ analyticUpdate }: Props) {
     <div className="container max-w-full sm:max-w-7xl mx-auto px-2 sm:px-4 lg:px-6 py-6">
       
       {!auth.userId && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/90 z-10 px-2">
+        <div className="absolute left-0 right-0 m-40 flex items-center justify-center z-10 px-2">
           <div className="bg-white p-4 xs:p-6 sm:p-6 rounded-lg shadow max-w-xs sm:max-w-sm text-center">
             <h2 className="text-base xs:text-lg sm:text-xl font-bold mb-2">You need to log in to view this content</h2>
             <Link href="/login">

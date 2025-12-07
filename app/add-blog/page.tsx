@@ -74,7 +74,7 @@ export default function AddBlogPage() {
         setNewCategoryName("");
         setShowAddCategory(false);
 
-        // select the newly added category by default
+        
         setCategoryId(String(optimisticId));
       } else {
         console.error("Failed to add category", res.data);
@@ -108,7 +108,7 @@ export default function AddBlogPage() {
       fd.append("blog_slug", slug);
       if (featureImage) fd.append("blog_feature_image", featureImage);
 
-      const res = await axios.put("/api/admin/blog/add", fd, {
+      const res = await axios.put("/api/blogs/add", fd, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

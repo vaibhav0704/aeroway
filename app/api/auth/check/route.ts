@@ -11,7 +11,6 @@ export async function GET(req: NextRequest) {
     const token = req.cookies.get("token")?.value;
 
     if (!token) {
-      console.log("No token found");
       return NextResponse.json({ message: "You are not logged in" }, { status: 401 });
     }
 
