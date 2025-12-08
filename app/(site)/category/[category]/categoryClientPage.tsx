@@ -1,10 +1,10 @@
 "use client";
 
-import PostCard from "@/app/components/home/post-card";
 import { fetchBlogs } from "@/redux/slices/blogSlice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import PostCard from "../../components/home/post-card";
 
 // Helper to generate slug from name
 const generateSlug = (str: string) => {

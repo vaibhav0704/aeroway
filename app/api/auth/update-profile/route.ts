@@ -2,15 +2,14 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 import { uploadToS3 } from "../../utils/s3";
 
-export const dynamic = "force-dynamic"; // optional if your route is dynamic
-export const revalidate = 0;            // optional caching
-export const runtime = "nodejs";        // optional runtime
+export const dynamic = "force-dynamic"; 
+export const revalidate = 0;            
+export const runtime = "nodejs";       
 
-export const fetchCache = "force-no-store"; // prevent caching
+export const fetchCache = "force-no-store"; 
 
 export async function PUT(req: NextRequest) {
   try {
-    
     const formData = await req.formData();
 
     const id = formData.get("id")?.toString();
@@ -26,7 +25,6 @@ export async function PUT(req: NextRequest) {
 
     let profileUrl: string | null = null;
 
-    
     const file = formData.get("profile") as File | null;
     if (file && file.size > 0) {
       const arrayBuffer = await file.arrayBuffer();
@@ -38,12 +36,10 @@ export async function PUT(req: NextRequest) {
         mimetype: file.type,
       });
     } else {
-      
       const existingProfile = formData.get("profile")?.toString();
       if (existingProfile) profileUrl = existingProfile;
     }
 
-    
     const db = getDB();
     const SQL = `
       UPDATE auth SET
@@ -67,9 +63,3 @@ export async function PUT(req: NextRequest) {
     );
   }
 }
-
-export const config = {
-  api: {
-    bodyParser: false, 
-  },
-};
