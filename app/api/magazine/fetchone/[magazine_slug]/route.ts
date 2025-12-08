@@ -41,7 +41,6 @@ export async function GET(req: NextRequest,
 
     const [rows] = await db.query<RowDataPacket[]>(sql, [magazine_slug]);
     const results = rows as Magazine[];
-    console.log(results);
 
     if (results.length === 0) {
       return NextResponse.json({ error: "Magazine Not Found" }, { status: 404 });

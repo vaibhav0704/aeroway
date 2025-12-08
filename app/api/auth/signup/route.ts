@@ -18,7 +18,6 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 10);
     const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
 
-    // Check if username or email already exists
     const [existingUsers] = await db.query(
       "SELECT * FROM auth WHERE username = ? OR email = ?",
       [username, email]
@@ -30,19 +29,17 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    // Insert new user
     await db.query(
       "INSERT INTO auth (username, email, password, name, role, date) VALUES (?, ?, ?, ?, ?, ?)",
       [username, email, hashedPassword, name, "user", currentDate]
     );
 
+    const responseMessage = `Hey, ${name}! Account created successfully.`;
     return NextResponse.json(
-      { message: `Hey, ${name}! Account created successfully.` },
+      { message: responseMessage },
       { status: 200 }
     );
   } catch (err) {
-    console.error("Signup Error:", err);
     return NextResponse.json(
       { error: "Internal Server error" },
       { status: 500 }

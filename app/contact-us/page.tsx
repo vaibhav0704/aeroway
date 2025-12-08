@@ -35,7 +35,6 @@ export default function ContactPage() {
 
   const [errors, setErrors] = useState<FormErrors>({});
 
-  // Validation function
   const validate = () => {
     const newErrors: FormErrors = {};
 
@@ -75,7 +74,6 @@ export default function ContactPage() {
       try {
         setLoading(true);
 
-      
         const response = await fetch("/api/contact", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -83,6 +81,7 @@ export default function ContactPage() {
         });
 
         const data = await response.json();
+
         if (response.ok) {
           alert(data.message || "Message sent successfully!");
           setFormData({
@@ -96,7 +95,6 @@ export default function ContactPage() {
           alert(data.message || "Failed to send message.");
         }
       } catch (error) {
-        console.error(error);
         alert("Failed to send message. Please try again.");
       } finally {
         setLoading(false);
@@ -104,21 +102,19 @@ export default function ContactPage() {
     }
   };
 
-  
-  function onNameKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
+  const onNameKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const char = event.key;
     if (!/^[A-Za-z ]$/.test(char)) event.preventDefault();
-  }
+  };
 
-
-  function onNumberKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
+  const onNumberKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
     const char = event.key;
     const input = event.currentTarget.value;
 
     if (!/^\d$/.test(char) && !(char === "+" && input.length === 0)) {
       event.preventDefault();
     }
-  }
+  };
 
   return (
     <div className="w-full py-16 px-4 md:px-10 lg:px-20 lg:py-40">
@@ -138,14 +134,10 @@ export default function ContactPage() {
           className="text-gray-400 text-justify"
         >
           Aeroway.One is an exciting website dedicated to aviation and space
-          enthusiasts. Dive into a captivating collection of articles,
-          informative features, and thought-provoking insights. Explore a
-          variety of topics, including aviation history, aircraft reviews,
-          updates on space exploration, pilot anecdotes, and much more.
+          enthusiasts. Dive into a captivating collection of articles...
         </motion.p>
       </div>
 
-      {/* Contact Info */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -155,7 +147,7 @@ export default function ContactPage() {
       >
         <a
           href="tel:+17863712232"
-          className="text-[#336efd] flex items-center gap-2 hover:text-blue-300 leading-none"
+          className="text-[#336efd] flex items-center gap-2 hover:text-blue-300"
         >
           <TfiHeadphoneAlt size={36} />
           +1-786-371-2232
@@ -165,14 +157,13 @@ export default function ContactPage() {
           href="https://www.google.com/maps/search/?api=1&query=30+N+Gould+St+%2324999,+Sheridan,+WY+82801"
           target="_blank"
           rel="noreferrer"
-          className="text-[#336efd] flex items-center gap-2 hover:text-blue-300 leading-none"
+          className="text-[#336efd] flex items-center gap-2 hover:text-blue-300"
         >
           <SlLocationPin size={36} />
           30 N Gould St #24999, Sheridan, WY 82801
         </a>
       </motion.div>
 
-      {/* Form */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -190,9 +181,6 @@ export default function ContactPage() {
         <motion.form
           className="grid grid-cols-1 md:grid-cols-2 gap-6"
           onSubmit={handleSubmit}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.9, duration: 0.8 }}
         >
           <div>
             <input
@@ -219,9 +207,7 @@ export default function ContactPage() {
               className="w-full p-3 rounded-lg bg-slate-200 outline-none placeholder-gray-400"
             />
             {errors.email && (
-              <p className="text-red-500 bg-slate-200 text-sm mt-1">
-                {errors.email}
-              </p>
+              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
             )}
           </div>
 
@@ -275,8 +261,7 @@ export default function ContactPage() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="px-4 inline-flex text-sm items-center gap-1 py-2 text-white mb-4 pl-3
-                bg-linear-to-r from-orange-600 to-orange-300 rounded-md cursor-pointer
-                transition"
+                bg-linear-to-r from-orange-600 to-orange-300 rounded-md cursor-pointer"
             >
               {loading ? "Sending..." : "Send Message"}
               <TiArrowRightThick />

@@ -11,36 +11,53 @@ export async function sendMail(
   attachments?: Attachment[]
 ) {
 
-  const RECEIVER_EMAIL = process.env.EMAIL_USER; 
 
-  if (!RECEIVER_EMAIL) {
-    throw new Error("Receiver email is not defined in environment variables");
+  const CLEAN_PASS = process.env.EMAIL_PASS?.replace(/\s+/g, "") || "";
+
+
+  const EMAIL = process.env.EMAIL_USER;
+  const PASS = CLEAN_PASS;
+  const HOST = "smtp.gmail.com"; 
+  const PORT = 465; 
+
+  if (!EMAIL || !PASS || !HOST) {
+    throw new Error("SMTP environment variables missing");
   }
 
-  
+
+
   const transporter = nodemailer.createTransport({
-    service: process.env.EMAIL_SERVICE,
-    host: process.env.EMAIL_HOST,
-    port: Number(process.env.EMAIL_PORT) || 587,
-    secure: false, 
+    host: HOST,
+    port: PORT,
+    secure: true, 
     auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
+      user: EMAIL,
+      pass: PASS,
     },
+    tls: {
+      rejectUnauthorized: false,
+    },
+    logger: true,
+    debug: true,
   });
 
 
-  const info = await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: RECEIVER_EMAIL,          
-    subject,
-    html,
-    attachments: attachments?.map((a) => ({
-      filename: a.filename,
-      path: a.path,
-    })),
-  });
 
-  console.log("Message sent: %s", info.messageId);
-  return info;
+  try {
+    const info = await transporter.sendMail({
+      from: `"Aeroway" <${EMAIL}>`,
+      to: process.env.RECIEVER_EMAIL,
+      subject,
+      html,
+      attachments: attachments?.map((a) => ({
+        filename: a.filename,
+        path: a.path,
+      })),
+    });
+
+    return info;
+
+  } catch (error) {
+    throw error;
+  }
 }

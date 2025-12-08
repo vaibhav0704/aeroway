@@ -3,7 +3,7 @@
 import { ChangeEvent, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import { generateSlug as clientGenerateSlug  } from "../api/utils/slug";
+import { generateSlug as clientGenerateSlug  } from "../../api/utils/slug";
 
 type Category = {
   category_id: number;

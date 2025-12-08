@@ -34,7 +34,7 @@ export default function SignupPage() {
     setSuccess(null);
 
     if (form.password !== form.confirmPassword) {
-      setError("Passwords do not match");
+      setError("Password and Confirm Password should be same");
       setLoading(false);
       return;
     }

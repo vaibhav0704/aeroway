@@ -3,6 +3,8 @@ import { getDB } from "@/lib/db";
 import { sendMail } from "../utils/sendMail";
 
 
+export const runtime = "nodejs";
+
 interface ContactData {
   name: string;
   email: string;
@@ -13,10 +15,11 @@ interface ContactData {
 
 export async function POST(req: NextRequest) {
   try {
+
     const body = await req.json();
+
     const { name, email, number, subject, message } = body as ContactData;
 
-    
     if (!name?.trim() || !email?.trim() || !number?.trim()) {
       return NextResponse.json(
         { message: "Name, email, and phone number are required." },
@@ -24,7 +27,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    
+ 
+
     const db = getDB();
     const insertQuery =
       "INSERT INTO contact_us (name, email, number, subject, message) VALUES (?, ?, ?, ?, ?)";
@@ -37,30 +41,36 @@ export async function POST(req: NextRequest) {
       message || null,
     ]);
 
+
     
     const html = `
-      <div style="font-family: Arial, sans-serif; padding: 20px; color: #333;">
+      <div style="font-family: Arial; padding: 20px; color: #333;">
         <h2 style="color: #f97316;">New Contact Form Submission</h2>
         <p><strong>Name:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone Number:</strong> ${number}</p>
+        <p><strong>Phone:</strong> ${number}</p>
         <p><strong>Subject:</strong> ${subject || "N/A"}</p>
         <p><strong>Message:</strong></p>
-        <p style="border-left: 3px solid #f97316; padding-left: 10px;">${message || "N/A"}</p>
+        <div>${message || "N/A"}</div>
       </div>
     `;
 
-  
+   
+    
+
     await sendMail(subject || "New Contact Form Submission", html);
 
+
     return NextResponse.json(
-      { message: "Your data has been saved and email sent successfully!" },
+      { message: "Sent successfully!" },
       { status: 200 }
     );
-  } catch (error) {
-    console.error(error);
+  } catch (err: any) {
     return NextResponse.json(
-      { message: "Error saving contact information or sending email" },
+      {
+        message: "Server error, please try again later.",
+        error: err?.message,
+      },
       { status: 500 }
     );
   }
