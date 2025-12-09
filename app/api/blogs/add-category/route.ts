@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     const sql = "INSERT INTO `blog_category`(`category_name`, `category_slug`) VALUES (?, ?)";
     await db.execute(sql, [categoryName, slug]);
 
-    return NextResponse.json({ message: "Category Added" });
+    return NextResponse.json({ message: "Category added successfully" });
   } catch (err: any) {
     console.error("Add category error:", err);
     return NextResponse.json({ message: "Error", error: err.message }, { status: 500 });

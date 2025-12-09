@@ -1,8 +1,9 @@
+
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 
-//==================== Types ====================//
 interface Category {
+  category_id: number; // Added this field based on usage in page.tsx
   category_name: string;
   category_slug: string;
 }
@@ -13,19 +14,17 @@ interface CategoryState {
   error: string | null;
 }
 
-//==================== Initial State ====================//
 const initialState: CategoryState = {
   categories: [],
   status: "idle",
   error: null,
 };
 
-//==================== Async Thunk ====================//
 export const fetchCategories = createAsyncThunk<Category[]>(
   "categories/fetchCategories",
   async (_, { rejectWithValue }) => {
     try {
-      // Call Next.js API route directly (no external URL)
+      
       const response = await axios.get<Category[]>("/api/blogs/fetchcategories");
       return response.data;
     } catch (err: any) {

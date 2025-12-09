@@ -8,6 +8,8 @@ export const runtime = "nodejs";
 export const revalidate = 0;
 
 export async function PUT(req: NextRequest) {
+
+  console.log("Backend called from blogs/add")
   try {
     const formData = await req.formData();
 
@@ -61,7 +63,7 @@ export async function PUT(req: NextRequest) {
 
     await db.execute(sql, values);
 
-    return NextResponse.json({ message: "Data inserted successfully" });
+    return NextResponse.json({ message: "Blog added successfully" });
   } catch (error: any) {
     console.error("Add blog error:", error);
     return NextResponse.json({ message: "Error inserting blog", error: error.message }, { status: 500 });

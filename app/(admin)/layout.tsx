@@ -1,7 +1,10 @@
+import Providers from "./admin/provider";
+
 export default function AdminLayout({ children }) {
   return (
     <div >
-        {children}
+      <Providers> {children}</Providers>
+       
     </div>
   );
 }

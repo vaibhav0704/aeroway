@@ -31,9 +31,10 @@ const SignIn = () => {
         body: JSON.stringify(values),
         credentials: "include",
       });
+      console.log(res);
       const data = await res.json();
       if (data.Status === "Success") {
-        router.push("/dashboard");
+        router.push("/admin/dashboard");
       } else {
         setErrors(data.Error || "Login failed");
       }

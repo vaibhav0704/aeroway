@@ -1,4 +1,3 @@
-// /app/api/blog/fetchcategory/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db"; 
 
