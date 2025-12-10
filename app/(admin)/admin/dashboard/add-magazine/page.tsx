@@ -3,23 +3,16 @@
 import { useRef, useState, useMemo } from "react";
 import dynamic from "next/dynamic";
 import Breadcrumb from "../components/bread-crumb";
-// import axios from 'axios'; // Removed as API logic is commented out/removed
-
-// 1. Dynamically import JoditEditor with SSR disabled
-const JoditEditor = dynamic(() => import("jodit-react"), {
-  ssr: false, // This is the key change: ensures Jodit is only loaded on the client side
-});
-
-// Import Jodit CSS globally or ensure it's handled in your root layout/setup
-// For now, keep the import here if it's the only place it's used, but dynamic import helps avoid SSR issues.
-import "jodit";
 import { toast } from "sonner";
 import axios from "axios";
+import { IConfig } from "jodit/types";
+
+const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 interface FormValues {
   magazineTitle: string;
   tags: string;
-  image: File | string; // File object for input, string for initial state
+  image: File | string;
   date: string;
   category: string;
   MagCloudLink: string;
@@ -27,13 +20,12 @@ interface FormValues {
   description: string;
 }
 
-const editorConfig = {
-  // ... (Your existing editorConfig remains the same)
+const editorConfig: Partial<IConfig> = {
   readonly: false,
   toolbar: true,
   spellcheck: true,
   language: "en",
-  toolbarButtonSize: "medium",
+  toolbarButtonSize: "middle",
   showCharsCounter: true,
   showWordsCounter: true,
   showXPathInStatusbar: false,
@@ -63,9 +55,8 @@ const editorConfig = {
 };
 
 const MagazinePostForm: React.FC = () => {
-  const [errorMessage, setErrorMessage] = useState<string>("");
-  const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
-
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [values, setValues] = useState<FormValues>({
     magazineTitle: "",
     tags: "",
@@ -85,17 +76,13 @@ const MagazinePostForm: React.FC = () => {
       setValues({ ...values, image });
       const fileExtension = image.name.split(".").pop()?.toLowerCase();
       const allowedFormats = ["jpeg", "jpg", "png", "webp"];
-
       if (fileExtension && allowedFormats.includes(fileExtension)) {
         setErrorMessage("");
       } else {
         setErrorMessage(
           "Invalid image format. Please upload a JPEG, JPG, PNG, or WebP file."
         );
-
-        if (imageInputRef.current) {
-          imageInputRef.current.value = "";
-        }
+        if (imageInputRef.current) imageInputRef.current.value = "";
         setValues((prev) => ({ ...prev, image: "" }));
       }
     } else {
@@ -139,18 +126,14 @@ const MagazinePostForm: React.FC = () => {
       formData.append("PdfLink", values.PdfLink);
       formData.append("description", values.description);
 
-      
-      if (values.image instanceof File) {
-        formData.append("image", values.image);
-      } else {
+      if (values.image instanceof File) formData.append("image", values.image);
+      else {
         toast.error("Invalid image file");
         return;
       }
 
       const res = await axios.post("/api/magazine/add", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
       toast.success("Magazine saved successfully!");
@@ -161,16 +144,17 @@ const MagazinePostForm: React.FC = () => {
     } finally {
       setIsSubmitting(false);
     }
+
     setValues({
-    magazineTitle: "",
-    tags: "",
-    image: "",
-    date: "",
-    category: "",
-    MagCloudLink: "",
-    PdfLink: "",
-    description: "",
-  })
+      magazineTitle: "",
+      tags: "",
+      image: "",
+      date: "",
+      category: "",
+      MagCloudLink: "",
+      PdfLink: "",
+      description: "",
+    });
   };
 
   const memoizedEditorConfig = useMemo(() => editorConfig, []);
@@ -178,10 +162,8 @@ const MagazinePostForm: React.FC = () => {
   return (
     <div className="px-4 xl:px-20 flex flex-col gap-6 pt-6 min-h-screen">
       <Breadcrumb pageName="Post Magazines" />
-
       <div className="grid grid-cols-1 gap-9">
         <div className="flex flex-col gap-9">
-       
           <div className="rounded-sm border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
             <div className="border-b border-gray-200 py-4 px-6 dark:border-gray-700">
               <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -204,10 +186,9 @@ const MagazinePostForm: React.FC = () => {
                       onChange={(e) =>
                         setValues({ ...values, magazineTitle: e.target.value })
                       }
-                      className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-3 px-5 text-gray-900 outline-none transition duration-150 focus:border-blue-500 active:border-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
+                      className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-3 px-5 text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
                     />
                   </div>
-
                   <div className="w-full xl:w-1/2">
                     <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                       Magazine Keywords
@@ -221,11 +202,10 @@ const MagazinePostForm: React.FC = () => {
                       onChange={(e) =>
                         setValues({ ...values, tags: e.target.value })
                       }
-                      className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-3 px-5 text-gray-900 outline-none transition duration-150 focus:border-blue-500 active:border-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
+                      className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-3 px-5 text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
                     />
                   </div>
                 </div>
-
                 <div className="mb-4 flex flex-col gap-6 xl:flex-row">
                   <div className="w-full xl:w-1/2">
                     <div className="mb-4 gap-4">
@@ -238,17 +218,14 @@ const MagazinePostForm: React.FC = () => {
                           name="featureImage"
                           ref={imageInputRef}
                           onChange={handleImageChange}
-                          className="w-full cursor-pointer rounded-lg border-2 border-gray-300 bg-transparent py-2 px-5 font-medium text-gray-900 outline-none transition duration-150 focus:border-blue-500 active:border-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-300 dark:hover:file:bg-blue-800"
+                          className="w-full cursor-pointer rounded-lg border-2 border-gray-300 bg-transparent py-2 px-5 font-medium text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-300 dark:hover:file:bg-blue-800"
                         />
                         {errorMessage && (
-                          <p className="mt-2 text-sm text-red-500">
-                            {errorMessage}
-                          </p>
+                          <p className="mt-2 text-sm text-red-500">{errorMessage}</p>
                         )}
                       </div>
                     </div>
                   </div>
-
                   <div className="w-full xl:w-1/2">
                     <div className="mb-4 flex flex-col gap-6 xl:flex-row">
                       <div className="w-full sm:w-1/2">
@@ -261,7 +238,7 @@ const MagazinePostForm: React.FC = () => {
                           onChange={(e) =>
                             setValues({ ...values, date: e.target.value })
                           }
-                          className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-2.5 px-5 font-medium text-gray-900 outline-none transition duration-150 focus:border-blue-500 active:border-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
+                          className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-2.5 px-5 font-medium text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
                         />
                       </div>
                       <div className="w-full sm:w-1/2">
@@ -277,13 +254,12 @@ const MagazinePostForm: React.FC = () => {
                           onChange={(e) =>
                             setValues({ ...values, category: e.target.value })
                           }
-                          className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-2.5 px-5 font-medium text-gray-900 outline-none transition duration-150 focus:border-blue-500 active:border-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
+                          className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-2.5 px-5 font-medium text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
                         />
                       </div>
                     </div>
                   </div>
                 </div>
-
                 <div className="mb-6 flex flex-col gap-6 xl:flex-row">
                   <div className="w-full xl:w-1/2">
                     <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -298,15 +274,13 @@ const MagazinePostForm: React.FC = () => {
                       onChange={(e) =>
                         setValues({ ...values, MagCloudLink: e.target.value })
                       }
-                      className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-3 px-5 text-gray-900 outline-none transition duration-150 focus:border-blue-500 active:border-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
+                      className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-3 px-5 text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
                     />
                   </div>
-
                   <div className="w-full xl:w-1/2">
                     <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                       PDF Link
                     </label>
-
                     <input
                       type="text"
                       id="PdfLink"
@@ -316,11 +290,10 @@ const MagazinePostForm: React.FC = () => {
                       onChange={(e) =>
                         setValues({ ...values, PdfLink: e.target.value })
                       }
-                      className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-3 px-5 text-gray-900 outline-none transition duration-150 focus:border-blue-500 active:border-blue-500 disabled:cursor-not-allowed disabled:bg-gray-100 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
+                      className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-3 px-5 text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
                     />
                   </div>
                 </div>
-
                 <div className="mb-6">
                   <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Content
@@ -331,18 +304,14 @@ const MagazinePostForm: React.FC = () => {
                     onChange={(value) =>
                       setValues({ ...values, description: value })
                     }
-                    // Apply Tailwind classes for theme consistency on the container
                     className="rounded-lg border-2 border-gray-300 focus-within:border-blue-500 dark:border-gray-600 dark:focus-within:border-blue-500"
                   />
                 </div>
-
                 <div className="flex justify-end gap-4">
                   <button
                     className="flex justify-center rounded-lg border border-gray-300 py-2 px-6 font-medium text-gray-900 transition duration-150 hover:bg-gray-50 dark:border-gray-600 dark:text-white dark:hover:bg-gray-700"
-                    type="button" // Change to button type to prevent form submission on Cancel
-                    onClick={() => {
-                      console.log("Cancel button clicked");
-                    }}
+                    type="button"
+                    onClick={() => console.log("Cancel button clicked")}
                   >
                     Cancel
                   </button>

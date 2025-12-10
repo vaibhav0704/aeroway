@@ -96,7 +96,6 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({ message: "Data inserted Successfully" });
   } catch (error: any) {
-    console.error("Add magazine error:", error);
     return NextResponse.json(
       { message: "Error inserting magazine", error: error.message },
       { status: 500 }

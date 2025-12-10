@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, ChangeEvent, FormEvent } from "react";
+import { useAppDispatch } from "@/redux/hook";
+import { adminLogin } from "@/redux/adminActions";
+import { toast } from "sonner";
 
 interface SignInValues {
   email: string;
@@ -11,6 +14,8 @@ interface SignInValues {
 
 const SignIn = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
+
   const [values, setValues] = useState<SignInValues>({
     email: "",
     password: "",
@@ -24,24 +29,7 @@ const SignIn = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    try {
-      const res = await fetch("/api/admin/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-        credentials: "include",
-      });
-      console.log(res);
-      const data = await res.json();
-      if (data.Status === "Success") {
-        router.push("/admin/dashboard");
-      } else {
-        setErrors(data.Error || "Login failed");
-      }
-    } catch (err) {
-      console.error("Login error:", err);
-      setErrors("Something went wrong");
-    }
+    const response = await dispatch(adminLogin(values.email, values.password));
   };
 
   return (
@@ -148,6 +136,7 @@ const SignIn = () => {
               >
                 Sign In
               </button>
+
               {errors && <p className="text-red-500 mt-2 text-sm">{errors}</p>}
             </form>
           </div>

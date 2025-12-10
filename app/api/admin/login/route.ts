@@ -19,7 +19,10 @@ export async function POST(req: NextRequest) {
     }
 
     const db = getDB();
-    const [rows] = await db.query("SELECT * FROM `admin` WHERE `email` = ?", [email]);
+    const [rows] = await db.query(
+      "SELECT * FROM `admin` WHERE `email` = ?",
+      [email]
+    );
 
     const data = rows as any[];
 
@@ -29,11 +32,20 @@ export async function POST(req: NextRequest) {
 
     const user = data[0];
 
-    const isPasswordValid = await bcrypt.compare(password.toString(), user.password);
+    const isPasswordValid = await bcrypt.compare(
+      password.toString(),
+      user.password
+    );
 
     if (!isPasswordValid) {
-      return NextResponse.json({ Error: "Password not matched!" }, { status: 401 });
+      return NextResponse.json(
+        { Error: "Password not matched!" },
+        { status: 401 }
+      );
     }
+
+  
+    const { password: _, ...cleanUser } = user;
 
     const token = jwt.sign(
       { id: user.id },
@@ -41,7 +53,10 @@ export async function POST(req: NextRequest) {
       { expiresIn: "1d" }
     );
 
-    const response = NextResponse.json({ Status: "Success" });
+    const response = NextResponse.json({
+      Status: "Success",
+      admin: cleanUser,
+    });
 
     response.cookies.set({
       name: "admin-token",
@@ -50,13 +65,11 @@ export async function POST(req: NextRequest) {
       secure: true,
       sameSite: "none",
       path: "/",
-      maxAge: 60 * 60 * 24, 
+      maxAge: 60 * 60 * 24,
     });
 
     return response;
-
   } catch (error: any) {
-    console.error("Admin login error:", error);
     return NextResponse.json(
       { Error: "Login error in server", details: error.message },
       { status: 500 }

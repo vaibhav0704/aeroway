@@ -48,7 +48,6 @@ export async function GET(req: NextRequest,
 
     return NextResponse.json(results[0]);
   } catch (err) {
-    console.error("Error fetching magazine:", err);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

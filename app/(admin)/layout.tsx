@@ -1,9 +1,9 @@
-import Providers from "./admin/provider";
+"use client"
 
 export default function AdminLayout({ children }) {
   return (
     <div >
-      <Providers> {children}</Providers>
+       {children}
        
     </div>
   );
