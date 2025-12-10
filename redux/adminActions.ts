@@ -35,10 +35,7 @@ export const adminLogin =
     }
   };
 
-
-
-
-  export const adminLogout = () => async (dispatch: Dispatch) => {
+export const adminLogout = () => async (dispatch: Dispatch) => {
   try {
     await axios.post("/api/admin/logout", {}, { withCredentials: true });
 
@@ -48,10 +45,7 @@ export const adminLogin =
         id: null,
         name: "",
         number: null,
-        profile: "",
-        profession: "",
         email: "",
-        bio: "",
       })
     );
   } catch (err) {

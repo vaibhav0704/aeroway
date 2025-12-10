@@ -5,7 +5,6 @@ import dynamic from "next/dynamic";
 import Breadcrumb from "../components/bread-crumb";
 import { toast } from "sonner";
 import axios from "axios";
-import { IConfig } from "jodit/types";
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
@@ -20,7 +19,7 @@ interface FormValues {
   description: string;
 }
 
-const editorConfig: Partial<IConfig> = {
+const editorConfig: any = {
   readonly: false,
   toolbar: true,
   spellcheck: true,
@@ -208,55 +207,49 @@ const MagazinePostForm: React.FC = () => {
                 </div>
                 <div className="mb-4 flex flex-col gap-6 xl:flex-row">
                   <div className="w-full xl:w-1/2">
-                    <div className="mb-4 gap-4">
-                      <div>
-                        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Feature Image
-                        </label>
-                        <input
-                          type="file"
-                          name="featureImage"
-                          ref={imageInputRef}
-                          onChange={handleImageChange}
-                          className="w-full cursor-pointer rounded-lg border-2 border-gray-300 bg-transparent py-2 px-5 font-medium text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-300 dark:hover:file:bg-blue-800"
-                        />
-                        {errorMessage && (
-                          <p className="mt-2 text-sm text-red-500">{errorMessage}</p>
-                        )}
-                      </div>
-                    </div>
+                    <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                      Feature Image
+                    </label>
+                    <input
+                      type="file"
+                      name="featureImage"
+                      ref={imageInputRef}
+                      onChange={handleImageChange}
+                      className="w-full cursor-pointer rounded-lg border-2 border-gray-300 bg-transparent py-2 px-5 font-medium text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-blue-900 dark:file:text-blue-300 dark:hover:file:bg-blue-800"
+                    />
+                    {errorMessage && (
+                      <p className="mt-2 text-sm text-red-500">{errorMessage}</p>
+                    )}
                   </div>
-                  <div className="w-full xl:w-1/2">
-                    <div className="mb-4 flex flex-col gap-6 xl:flex-row">
-                      <div className="w-full sm:w-1/2">
-                        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Date
-                        </label>
-                        <input
-                          type="date"
-                          value={values.date}
-                          onChange={(e) =>
-                            setValues({ ...values, date: e.target.value })
-                          }
-                          className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-2.5 px-5 font-medium text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
-                        />
-                      </div>
-                      <div className="w-full sm:w-1/2">
-                        <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Category
-                        </label>
-                        <input
-                          type="text"
-                          id="category"
-                          name="category"
-                          placeholder="Enter magazine's category"
-                          value={values.category}
-                          onChange={(e) =>
-                            setValues({ ...values, category: e.target.value })
-                          }
-                          className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-2.5 px-5 font-medium text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
-                        />
-                      </div>
+                  <div className="w-full xl:w-1/2 flex flex-col gap-6 xl:flex-row">
+                    <div className="w-full sm:w-1/2">
+                      <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Date
+                      </label>
+                      <input
+                        type="date"
+                        value={values.date}
+                        onChange={(e) =>
+                          setValues({ ...values, date: e.target.value })
+                        }
+                        className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-2.5 px-5 font-medium text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
+                      />
+                    </div>
+                    <div className="w-full sm:w-1/2">
+                      <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Category
+                      </label>
+                      <input
+                        type="text"
+                        id="category"
+                        name="category"
+                        placeholder="Enter magazine's category"
+                        value={values.category}
+                        onChange={(e) =>
+                          setValues({ ...values, category: e.target.value })
+                        }
+                        className="w-full rounded-lg border-2 border-gray-300 bg-transparent py-2.5 px-5 font-medium text-gray-900 outline-none transition duration-150 focus:border-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:focus:border-blue-500"
+                      />
                     </div>
                   </div>
                 </div>

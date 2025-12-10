@@ -4,7 +4,7 @@ import React, { useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion';
 
 import { FiGrid } from 'react-icons/fi';
 import { FaLayerGroup, FaRegNewspaper, FaBookOpen, FaBloggerB } from 'react-icons/fa6';
@@ -45,9 +45,17 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
   const isLinkActive = (href: string) =>
     href === '/' ? pathname === '/' : pathname.includes(href);
 
-  const sidebarVariants = {
-    open: { x: 0, opacity: 1, transition: { type: 'spring', stiffness: 120, damping: 15 } },
-    closed: { x: '-100%', opacity: 0, transition: { duration: 0.25 } },
+  const sidebarVariants: Variants = {
+    open: {
+      x: 0,
+      opacity: 1,
+      transition: { type: "spring" as const, stiffness: 120, damping: 15 },
+    },
+    closed: {
+      x: "-100%",
+      opacity: 0,
+      transition: { duration: 0.25 },
+    },
   };
 
   return (
@@ -82,10 +90,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
             />
           </Link>
 
-          <button
-            className="lg:hidden"
-            onClick={() => setSidebarOpen(false)}
-          >
+          <button className="lg:hidden" onClick={() => setSidebarOpen(false)}>
             <MdOutlineClose className="w-7 h-7 text-gray-800 dark:text-white" />
           </button>
         </div>
@@ -130,8 +135,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen }: SidebarProps) {
               </div>
             ))}
           </div>
-            <div className='mt-20'><Logout /></div>
-          
+          <div className="mt-20"><Logout /></div>
         </div>
       </motion.aside>
     </>
