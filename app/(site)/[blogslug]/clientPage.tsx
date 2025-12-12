@@ -140,7 +140,7 @@ export default function ClientPage({ blogslug }: { blogslug: string }) {
               dangerouslySetInnerHTML={{ __html: blog.blog_content }}
             />
 
-            {/* COMMENT SECTION UI (UNCHANGED) */}
+         
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}

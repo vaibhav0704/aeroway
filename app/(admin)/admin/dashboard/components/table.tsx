@@ -4,6 +4,7 @@ import { RootState } from "@/redux/store";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { useSelector } from "react-redux";
+import Delete from "./delete-blog";
 
 const TableOne = () => {
   const blogs = useSelector((state: RootState) => state.blogs.blogs);
@@ -63,8 +64,8 @@ const TableOne = () => {
                   <Link href={`/${item.blog_slug}`}>
                     <button className="text-blue-500 hover:text-blue-700 cursor-pointer">View</button>
                   </Link>
-                  <button className="text-yellow-500 hover:text-yellow-700 cursor-pointer">Edit</button>
-                  <button className="text-red-500 hover:text-red-700 cursor-pointer">Delete</button>
+                   <Link href={`/admin/dashboard/update-blog/${item.blog_slug}`}>  <button className="text-yellow-500 hover:text-yellow-700 cursor-pointer">Edit</button></Link>
+                  <Delete blogId={item.blog_id} />
                 </td>
               </motion.tr>
             ))}
@@ -73,7 +74,7 @@ const TableOne = () => {
       </div>
 
       <div className="mt-4 flex justify-end">
-        <Link href="/">
+        <Link href="/admin/dashboard/blogs">
           <button className="px-6 py-2 rounded-lg bg-primary text-white bg-orange-400 cursor-pointer hover:bg-primary/90 transition">
             View All
           </button>

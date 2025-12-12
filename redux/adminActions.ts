@@ -37,8 +37,10 @@ export const adminLogin =
 
 export const adminLogout = () => async (dispatch: Dispatch) => {
   try {
-    await axios.post("/api/admin/logout", {}, { withCredentials: true });
+    // Call backend logout API
+    await axios.get("/api/admin/logout", { withCredentials: true });
 
+    // Clear admin state in Redux
     dispatch(
       setAdmin({
         isAuthenticated: false,

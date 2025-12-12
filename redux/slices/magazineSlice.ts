@@ -1,4 +1,4 @@
-// redux/slices/magazineSlice.ts
+
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import axios from "axios";
 

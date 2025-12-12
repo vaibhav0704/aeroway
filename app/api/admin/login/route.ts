@@ -62,8 +62,6 @@ export async function POST(req: NextRequest) {
       name: "admin-token",
       value: token,
       httpOnly: true,
-      secure: true,
-      sameSite: "none",
       path: "/",
       maxAge: 60 * 60 * 24,
     });

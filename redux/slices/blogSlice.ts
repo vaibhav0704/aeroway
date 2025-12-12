@@ -37,6 +37,8 @@ export const fetchBlogByCategory = createAsyncThunk(
   }
 );
 
+
+
 export const getBlogsByTag = createAsyncThunk(
   "blogs/byTag",
   async (tag: string, { rejectWithValue }) => {
@@ -45,6 +47,22 @@ export const getBlogsByTag = createAsyncThunk(
       return data;
     } catch (err: any) {
       return rejectWithValue("Failed to fetch tagged blogs");
+    }
+  }
+);
+
+export const deleteBlog = createAsyncThunk(
+  "blogs/deleteBlog",
+  async (blogId: string, { rejectWithValue }) => {
+    try {
+      const { data } = await axios.delete(`/api/blogs/delete/${blogId}`);
+      if (data.success) {
+        return blogId;
+      } else {
+        return rejectWithValue(data.message || "Failed to delete blog");
+      }
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || "Failed to delete blog");
     }
   }
 );
