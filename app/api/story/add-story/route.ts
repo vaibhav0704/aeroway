@@ -7,11 +7,10 @@ export const POST = async (req: NextRequest) => {
   try {
     const formData = await req.formData();
     const title = formData.get("title")?.toString();
-    const storyTags = formData.get("storyTags")?.toString() || "";
     const date = formData.get("date")?.toString();
     const time = formData.get("time")?.toString();
 
-    const storiesRaw = formData.getAll("stories"); // must match frontend key "stories"
+    const storiesRaw = formData.getAll("stories"); 
 
     if (!title || !date || !time || storiesRaw.length === 0) {
       return NextResponse.json({ message: "Missing data" }, { status: 400 });

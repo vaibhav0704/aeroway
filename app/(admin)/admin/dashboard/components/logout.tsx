@@ -10,9 +10,8 @@ export default function Logout() {
 
   const handleLogout = async () => {
     try {
-      // Call Redux action which calls backend
+      
       await dispatch(adminLogout());
-      // Redirect to admin login page
       router.replace("/admin");
     } catch (err) {
       console.error("Logout failed", err);

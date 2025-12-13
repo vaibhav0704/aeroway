@@ -21,11 +21,10 @@ const Delete: React.FC<DeleteProps> = ({ blogId }) => {
       const deletedId = await dispatch(deleteBlog(blogId)).unwrap();
 
       toast.success("Blog deleted successfully!");
-      console.log("Deleted blog ID:", deletedId);
        dispatch(fetchBlogs ());
     } catch (err: any) {
-      toast.error(err || "Server Error!"); // error toast
-      console.error("Delete error:", err);
+      toast.error(err || "Server Error!"); 
+    
     }
   };
 

@@ -1,15 +1,14 @@
 "use client";
 
+import { fetchBlogs } from "@/redux/slices/blogSlice";
+import { fetchMagazines } from "@/redux/slices/magazineSlice";
+import { AppDispatch, RootState } from "@/redux/store";
 import { motion } from "framer-motion";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import Breadcrumb from "./components/bread-crumb";
 import CardDataStats from "./components/card-data-Stats";
 import TableOne from "./components/table";
-import Breadcrumb from "./components/bread-crumb";
-import { fetchBlogs } from "@/redux/slices/blogSlice";
-import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { AppDispatch, RootState } from "@/redux/store";
-import { useSelector } from "react-redux";
-import { fetchMagazines } from "@/redux/slices/magazineSlice";
 
 
 export default function Dashboard() {
@@ -30,10 +29,10 @@ export default function Dashboard() {
       
 
   return (
-    <div className="px-4 xl:px-20 flex flex-col gap-6 pt-6 min-h-screen">
+    <div className="  px-4 xl:px-20 flex flex-col gap-6 pt-6 min-h-screen">
       <Breadcrumb />
     
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className=" grid grid-cols-1 md:grid-cols-3 gap-6">
         {stats.map((stat, idx) => (
           <motion.div
             key={idx}

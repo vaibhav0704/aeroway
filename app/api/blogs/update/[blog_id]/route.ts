@@ -5,7 +5,7 @@ import { uploadToS3 } from "@/app/api/utils/s3";
 
 export const runtime = "nodejs";
 
-export async function PUT(req: NextRequest, context: { params: { blog_id: string } }) {
+export async function PUT(req: NextRequest, context: { params: Promise<{ blog_id: string }> }) {
   try {
     const params=await context.params;
     const { blog_id } = params;

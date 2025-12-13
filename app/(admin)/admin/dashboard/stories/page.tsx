@@ -156,7 +156,7 @@ const StoryTable: React.FC = () => {
                           <button className="text-blue-500 cursor-pointer">View</button>
                         </Link>
 
-                        <Link href={`/admin/dashboard/stories/edit/${story.story_slug}`}>
+                        <Link href={`/admin/dashboard/stories/edit/${story.id}`}>
                           <button className="text-orange-600 cursor-pointer">Edit</button>
                         </Link>
 

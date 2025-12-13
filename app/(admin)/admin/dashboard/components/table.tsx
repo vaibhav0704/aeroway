@@ -15,13 +15,13 @@ const TableOne = () => {
   const displayedBlogs = blogs.slice(0, maxDisplay);
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6">
+    <div className="bg-white max-w-[90vw] overflow-scroll dark:bg-gray-800 rounded-xl shadow-sm p-6">
       <h4 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
         Latest Blogs
       </h4>
 
-      <div className="overflow-x-auto">
-        <table className="w-full table-auto border-separate border-spacing-0">
+      <div className="overflow-x-scroll max-w-screen">
+        <table className="w-full table-auto  border-separate border-spacing-0">
           <thead>
             <tr className="bg-gray-50 dark:bg-gray-700">
               {["S.no", "Image", "Title", "Date", "Actions"].map((header, idx) => (
@@ -60,7 +60,7 @@ const TableOne = () => {
                   </span>
                 </td>
 
-                <td className="py-3 px-4 flex space-x-3">
+                <td className="py-3 px-4 flex flex-col items-center justify-center lg:flex-row space-x-3">
                   <Link href={`/${item.blog_slug}`}>
                     <button className="text-blue-500 hover:text-blue-700 cursor-pointer">View</button>
                   </Link>

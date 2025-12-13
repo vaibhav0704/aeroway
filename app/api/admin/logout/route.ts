@@ -3,18 +3,16 @@ import { NextResponse } from "next/server";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-
-export async function GET() {
+export async function POST() {
   try {
     const response = NextResponse.json({ Status: "Success" });
 
-    // Clear the admin-token cookie
-    response.cookies.set("admin-token", "", {
+    response.cookies.set({
+      name: "admin-token",
+      value: "",
       httpOnly: true,
-      secure: true, // works for both dev and prod
+      path: "/",
       expires: new Date(0),
-      path: "/", // must match the path used during login
-      sameSite: "lax",
     });
 
     return response;

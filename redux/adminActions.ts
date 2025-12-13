@@ -1,5 +1,5 @@
-import axios from "axios";
 import { Dispatch } from "@reduxjs/toolkit";
+import axios from "axios";
 import { setAdmin } from "./slices/adminSlice";
 
 export const adminLogin =
@@ -18,9 +18,8 @@ export const adminLogin =
             isAuthenticated: true,
           })
         );
-        console.log("from-admin-actions", res.data);
 
-        return { success: true };
+        return { success: true,...res.data.admin };
       }
 
       return { success: false, error: res.data.Error };
@@ -37,10 +36,10 @@ export const adminLogin =
 
 export const adminLogout = () => async (dispatch: Dispatch) => {
   try {
-    // Call backend logout API
-    await axios.get("/api/admin/logout", { withCredentials: true });
+    
+    await axios.post("/api/admin/logout", {}, { withCredentials: true });
 
-    // Clear admin state in Redux
+    
     dispatch(
       setAdmin({
         isAuthenticated: false,
@@ -48,6 +47,9 @@ export const adminLogout = () => async (dispatch: Dispatch) => {
         name: "",
         number: null,
         email: "",
+        image: null,
+        profession: "",
+        bio: "",
       })
     );
   } catch (err) {

@@ -1,16 +1,21 @@
-import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { NextRequest, NextResponse } from "next/server";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function DELETE(req: NextRequest, context: { params: { blog_id: string } }) {
+type Params = {
+  blog_id: string;
+};
 
-    const params=await context.params
-  const { blog_id } = params;
+export async function DELETE(
+  req: NextRequest,
+  context: { params: Promise<Params> }
+) {
+  const { blog_id } = await context.params;
 
-  console.log("BLOG_ID", blog_id);
+  console.log("BLOG_ID:", blog_id);
 
   if (!blog_id) {
     return NextResponse.json(
@@ -22,8 +27,11 @@ export async function DELETE(req: NextRequest, context: { params: { blog_id: str
   try {
     const db = await getDB();
 
-    
-    const [rows]: any = await db.query("SELECT * FROM blogs WHERE blog_id = ?", [blog_id]);
+    const [rows]: any = await db.query(
+      "SELECT * FROM blogs WHERE blog_id = ?",
+      [blog_id]
+    );
+
     if (!rows.length) {
       return NextResponse.json(
         { success: false, message: "Blog not found" },
@@ -31,14 +39,25 @@ export async function DELETE(req: NextRequest, context: { params: { blog_id: str
       );
     }
 
-    await db.execute("DELETE FROM blogs WHERE blog_id = ?", [blog_id]);
-    revalidatePath('/admin/dashboard')
+    await db.execute(
+      "DELETE FROM blogs WHERE blog_id = ?",
+      [blog_id]
+    );
 
-    return NextResponse.json({ success: true, message: "Blog deleted successfully" });
+    revalidatePath("/admin/dashboard");
+
+    return NextResponse.json({
+      success: true,
+      message: "Blog deleted successfully",
+    });
   } catch (error: any) {
     console.error("Delete blog error:", error);
     return NextResponse.json(
-      { success: false, message: "Error deleting blog", error: error.message },
+      {
+        success: false,
+        message: "Error deleting blog",
+        error: error.message,
+      },
       { status: 500 }
     );
   }
