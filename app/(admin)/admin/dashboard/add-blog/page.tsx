@@ -168,7 +168,7 @@ const FormLayout = () => {
     const response = await axios.put("/api/blogs/add", formData);
     toast.success("Blog added successfully.");
   } catch (err) {
-    console.log("Error submitting blog", err);
+    console.error("Error submitting blog", err);
   }
   setValues({
     title: "",

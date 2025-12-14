@@ -129,14 +129,8 @@ export default function EditMagazine() {
         formData.append("magazine_cover_image", values.magazine_cover_image);
       }
 
-      console.log("FormData Entries:");
-      for (const [key, value] of formData.entries()) {
-        if (value instanceof File) {
-          console.log(`${key}: FILE → ${value.name}, ${value.size}, ${value.type}`);
-        } else {
-          console.log(`${key}: ${value}`);
-        }
-      }
+    
+      
 
       await axios.put(`/api/magazine/update/${values.magazine_id}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },

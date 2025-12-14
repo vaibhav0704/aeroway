@@ -28,7 +28,6 @@ const CategoryForm = () => {
     try {
       
      const response=await axios.post('/api/blogs/add-category',{category});
-     console.log(response)
      toast.success(response.data.message);
       
       setCategory("");

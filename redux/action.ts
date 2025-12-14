@@ -1,5 +1,5 @@
-import axios from "axios";
 import { Dispatch } from "@reduxjs/toolkit";
+import axios from "axios";
 import { editUser, setAuth } from "./slices/authSlice";
 
 
@@ -95,7 +95,7 @@ export const saveLoggedInUser = () => async (dispatch: Dispatch) => {
       })
     );
   } catch (error) {
-    console.log("Failed to fetch logged-in user:", getErrorMessage(error));
+    console.error("Failed to fetch logged-in user:", getErrorMessage(error));
 
     dispatch(
       setAuth({

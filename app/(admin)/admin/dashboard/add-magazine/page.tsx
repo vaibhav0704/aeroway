@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Breadcrumb from "../components/bread-crumb";
 import { toast } from "sonner";
 import axios from "axios";
+import Link from "next/link";
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
@@ -136,7 +137,7 @@ const MagazinePostForm: React.FC = () => {
       });
 
       toast.success("Magazine saved successfully!");
-      console.log(res.data);
+  
     } catch (error: any) {
       console.error(error);
       toast.error(error?.response?.data?.message || "Something went wrong!");
@@ -301,13 +302,13 @@ const MagazinePostForm: React.FC = () => {
                   />
                 </div>
                 <div className="flex justify-end gap-4">
-                  <button
+                  <Link href={'/admin/dashboard/magazines'}
                     className="flex justify-center rounded-lg border border-gray-300 py-2 px-6 font-medium text-gray-900 transition duration-150 hover:bg-gray-50 dark:border-gray-600 dark:text-white dark:hover:bg-gray-700"
                     type="button"
-                    onClick={() => console.log("Cancel button clicked")}
+                    
                   >
                     Cancel
-                  </button>
+                  </Link>
                   <button
                     className={`flex justify-center rounded-lg bg-blue-600 py-2 px-6 font-medium text-white transition duration-150 hover:bg-blue-700 ${
                       isSubmitting ? "cursor-not-allowed opacity-50" : ""
