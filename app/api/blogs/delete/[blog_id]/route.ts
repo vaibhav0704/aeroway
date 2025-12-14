@@ -1,3 +1,4 @@
+import { adminAuth } from "@/app/api/middlewares/verify-admin";
 import { getDB } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
@@ -13,9 +14,11 @@ export async function DELETE(
   req: NextRequest,
   context: { params: Promise<Params> }
 ) {
+
+  const auth = await adminAuth(req);
+    if (auth instanceof NextResponse) return auth;
   const { blog_id } = await context.params;
 
-  console.log("BLOG_ID:", blog_id);
 
   if (!blog_id) {
     return NextResponse.json(

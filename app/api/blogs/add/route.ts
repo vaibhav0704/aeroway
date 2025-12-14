@@ -2,6 +2,7 @@ import { getDB } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { uploadToS3 } from "../../utils/s3";
 import { generateSlug } from "../../utils/slug";
+import { adminAuth } from "../../middlewares/verify-admin";
 
 
 export const runtime = "nodejs";
@@ -9,7 +10,8 @@ export const revalidate = 0;
 
 export async function PUT(req: NextRequest) {
 
-  console.log("Backend called from blogs/add")
+   const auth = await adminAuth(req);
+  if (auth instanceof NextResponse) return auth;
   try {
     const formData = await req.formData();
 
@@ -21,6 +23,7 @@ export async function PUT(req: NextRequest) {
     const publisher = formData.get("blog_publisher_id")?.toString() || "";
     const date = formData.get("blog_date")?.toString() || "";
     const time = formData.get("blog_time")?.toString() || "";
+
 
     if (!title) {
       return NextResponse.json({ message: "Title is required" }, { status: 400 });

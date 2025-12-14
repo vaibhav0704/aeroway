@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 import { generateSlug } from "../../../utils/slug";
 import { uploadToS3 } from "../../../utils/s3";
+import { adminAuth } from "@/app/api/middlewares/verify-admin";
 
 export const PUT = async (
   req: NextRequest,
@@ -10,6 +11,8 @@ export const PUT = async (
 
     const params=await context.params
   try {
+    const auth = await adminAuth(req);
+      if (auth instanceof NextResponse) return auth;
     const storyId = Number(params.id);
 
     if (!storyId || isNaN(storyId)) {

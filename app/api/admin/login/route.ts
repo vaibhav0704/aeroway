@@ -19,10 +19,9 @@ export async function POST(req: NextRequest) {
     }
 
     const db = getDB();
-    const [rows] = await db.query(
-      "SELECT * FROM `admin` WHERE `email` = ?",
-      [email]
-    );
+    const [rows] = await db.query("SELECT * FROM `admin` WHERE `email` = ?", [
+      email,
+    ]);
 
     const data = rows as any[];
 
@@ -44,11 +43,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-  
     const { password: _, ...cleanUser } = user;
 
     const token = jwt.sign(
-      { id: user.id },
+      { id: user.id, role: "admin" },
       process.env.JWT_SECRET_KEY as string,
       { expiresIn: "1d" }
     );
@@ -62,6 +60,8 @@ export async function POST(req: NextRequest) {
       name: "admin-token",
       value: token,
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
       path: "/",
       maxAge: 60 * 60 * 24,
     });

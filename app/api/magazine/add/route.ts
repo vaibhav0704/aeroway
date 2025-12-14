@@ -3,6 +3,7 @@ import { getDB } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuid } from "uuid";
 import { generateSlug } from "../../utils/slug";
+import { adminAuth } from "../../middlewares/verify-admin";
 
 interface FileData {
   buffer: Buffer;
@@ -14,6 +15,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(req: NextRequest) {
+  const auth = await adminAuth(req);
+    if (auth instanceof NextResponse) return auth;
   try {
     const formData = await req.formData();
 

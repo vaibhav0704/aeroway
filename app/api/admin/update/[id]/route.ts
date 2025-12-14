@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
+import { adminAuth } from "@/app/api/middlewares/verify-admin";
 
 export async function PUT(
   req: NextRequest,
@@ -9,6 +10,8 @@ export async function PUT(
   const adminId = params.id;
 
   try {
+    const auth = await adminAuth(req);
+      if (auth instanceof NextResponse) return auth;
     const body = await req.json();
 
     const name = body.name ?? null;

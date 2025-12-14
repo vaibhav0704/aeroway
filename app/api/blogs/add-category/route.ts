@@ -2,10 +2,13 @@
 import { getDB } from "@/lib/db";
 import { NextRequest, NextResponse } from "next/server";
 import { generateSlug } from "../../utils/slug";
+import { adminAuth } from "../../middlewares/verify-admin";
 
 export const runtime = "nodejs";
 
 export async function POST(req: NextRequest) {
+  const auth = await adminAuth(req);
+    if (auth instanceof NextResponse) return auth;
   try {
     const body = await req.json();
     const categoryName = body?.category?.toString()?.trim();

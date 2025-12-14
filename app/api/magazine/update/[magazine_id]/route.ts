@@ -4,12 +4,15 @@ import { getDB } from "@/lib/db";
 import { RowDataPacket } from "mysql2/promise";
 import { generateSlug } from "@/app/api/utils/slug";
 import { uploadToS3 } from "@/app/api/utils/s3";
+import { adminAuth } from "@/app/api/middlewares/verify-admin";
 
 export async function PUT(
   req: NextRequest,
   context: { params: Promise<{ magazine_id: string }> }
 ) {
   try {
+    const auth = await adminAuth(req);
+      if (auth instanceof NextResponse) return auth;
     const { magazine_id } = await context.params;
 
     const formData = await req.formData();

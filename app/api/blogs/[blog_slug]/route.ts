@@ -8,7 +8,7 @@ export async function GET(req: NextRequest ,
   context: { params: Promise<{blog_slug: string }> } 
 ) {
   const params=await context.params;
-  const {blog_slug}=params;
+
  
   try {
     const db = await getDB();

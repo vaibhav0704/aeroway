@@ -1,12 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 import { uploadToS3 } from "@/app/api/utils/s3";
+import { adminAuth } from "@/app/api/middlewares/verify-admin";
 
 
 export const runtime = "nodejs";
 
 export async function PUT(req: NextRequest, context: { params: Promise<{ blog_id: string }> }) {
   try {
+    const auth = await adminAuth(req);
+      if (auth instanceof NextResponse) return auth;
     const params=await context.params;
     const { blog_id } = params;
 

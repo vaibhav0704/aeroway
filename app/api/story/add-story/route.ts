@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
 import { generateSlug } from "../../utils/slug";
 import { uploadToS3 } from "../../utils/s3";
+import { adminAuth } from "../../middlewares/verify-admin";
 
 export const POST = async (req: NextRequest) => {
   try {
+    const auth = await adminAuth(req);
+      if (auth instanceof NextResponse) return auth;
     const formData = await req.formData();
     const title = formData.get("title")?.toString();
     const date = formData.get("date")?.toString();

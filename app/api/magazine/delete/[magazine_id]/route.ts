@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getDB } from "@/lib/db";
+import { adminAuth } from "@/app/api/middlewares/verify-admin";
 
 export async function DELETE(
   req: NextRequest,
   context: { params: Promise<{ magazine_id: string }> }
 ) {
   try {
+    const auth = await adminAuth(req);
+      if (auth instanceof NextResponse) return auth;
     const { magazine_id } = await context.params;
     const db = getDB();
 
